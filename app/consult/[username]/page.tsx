@@ -41,7 +41,7 @@ export default function Consult({params}: {params: {username: string}}) {
             { openModal && <ConsultDialog setDentalDisable={setDentalDisable} setSaveData={setSaveData} description={description} title={"Guardar"}/>}
             <div className='bg-secundary-color h-16 mb-12 flex items-center px-4 space-x-2'>
                 <Avatar className='mt-10' sx={{ width: 82, height: 82 }} src={"/img/home_image.png"} alt="User Image" />
-                <h2 className='text-2xl text-primary-color'>{params.username}</h2>
+                <h2 className='text-xl text-primary-color'>{params.username.replace("%20", " ")}</h2>
             </div>
             <div className='px-4 flex flex-col items-start'>
                 <h3 className='text-xl font-bold text-acent-color'>Signos Vitales</h3>
@@ -57,7 +57,7 @@ export default function Consult({params}: {params: {username: string}}) {
                                     endAdornment={
                                         <InputAdornment position="end">
                                             <IconButton
-                                                aria-label="toggle password visibility"
+                                                aria-label="Editable Input"
                                             >
                                                 <EditIcon />
                                             </IconButton>
@@ -71,7 +71,7 @@ export default function Consult({params}: {params: {username: string}}) {
 
                 <div className='flex flex-col items-center mt-2 space-y-5 w-full'>
                     <input type="button" onClick={handleSaveData} disabled={saveData} value={"GUARDAR"} className="h-12 w-full rounded-xl text-secundary-normal bg-primary-pressed shadow-xl text-center disabled:bg-primary-disable"/>
-                    <input type='button' onClick={() => router.push("/ficha")} disabled={dentalDisable} value={"INGRESAR FICHA DENTAL"} className="h-12 w-full rounded-xl border border-1 border-primary-pressed bg-secundary-normal text-primary-pressed text-center disabled:border-0 disabled:bg-white disabled:text-primary-disable"/>
+                    <input type='button' onClick={() => router.push("/ficha")} value={"INGRESAR FICHA DENTAL"} className="h-12 w-full rounded-xl border border-1 border-primary-pressed bg-secundary-normal text-primary-pressed text-center disabled:border-0 disabled:bg-white disabled:text-primary-disable"/>
                 </div>
 
             </div>
