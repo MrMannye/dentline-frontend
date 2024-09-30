@@ -74,7 +74,7 @@ export default function Pacient({params} : {params: {username: string}}) {
       </div>
 
       <div className='flex items-center justify-around'>
-        <Link href={"/dates"} className="h-12 w-44 rounded-xl border border-1 border-primary-pressed bg-secundary-normal text-primary-pressed flex items-center justify-center">CITA</Link>
+        <Link href={"/date"} className="h-12 w-44 rounded-xl border border-1 border-primary-pressed bg-secundary-normal text-primary-pressed flex items-center justify-center">CITA</Link>
         <Link href={`/consult/${params.username}`} className="h-12 w-44 rounded-xl text-secundary-normal bg-primary-pressed shadow-xl flex items-center justify-center">SIGNOS VITALES</Link>
       </div>
 
