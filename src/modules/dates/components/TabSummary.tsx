@@ -33,7 +33,7 @@ export default function TabSummary(props: { setSection: any }) {
     }
   ]
 
-  const handleSubmit = (e) => { 
+  const handleSubmit = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => { 
     e.preventDefault()
     setOpenModal(!openModal)
   }
