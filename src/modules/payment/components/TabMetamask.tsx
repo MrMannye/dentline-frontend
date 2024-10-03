@@ -1,10 +1,10 @@
-import React, { useEffect } from 'react'
+import { useEffect, useState } from "react"
 import QRCode from 'qrcode'
 import Image from 'next/image'
 
-function TabTarjeta() {
+function TabMetamask() {
 
-	const [qrCode, setQrCode] = React.useState<string>('')
+	const [qrCode, setQrCode] = useState<string>('')
 	useEffect(() => {
 		QRCode.toDataURL('https://www.google.com')
 			.then(url => {
@@ -22,4 +22,4 @@ function TabTarjeta() {
 	)
 }
 
-export default TabTarjeta
+export default TabMetamask
