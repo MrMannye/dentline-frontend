@@ -14,7 +14,7 @@ export default function CardDate() {
 				puede estar afectada.
 			</div>
 			<div className='bg-primary-200 w-full flex items-center justify-around rounded-b-xl p-1'>
-				<CalendarMonthIcon className='text-primary-color mx-3 text-base' />
+				<Link href={'/date'}><CalendarMonthIcon className='text-primary-color mx-3 text-base' /></Link>
 				<DeleteIcon className='text-primary-color mx-3 text-base' />
 			</div>
 		</Link>

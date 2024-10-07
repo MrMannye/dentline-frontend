@@ -56,13 +56,16 @@ export default function CustomizedDialogs(params: Props) {
 					<Tab label="Metamask" />
 					<Tab label="Efectivo" />
 				</Tabs>
-				<div className='p-2'>
+				<div className='p-2 flex flex-col items-center'>
 					{value === 0 && <TabTarjeta />}
 					{value === 1 && <TabMetamask />}
 					{value === 2 && <TabEfectivo />}
+					<span>Dentista: Miguel Aguilera</span>
+					<span>Paciente: Francisco Arturo</span>
+					<strong>Pago: $500 MXN</strong>
 				</div>
 			</DialogContent>
-			<DialogActions>
+			<DialogActions className='p-4'>
 				<Button autoFocus onClick={handleClose}>
 					Abonar
 				</Button>

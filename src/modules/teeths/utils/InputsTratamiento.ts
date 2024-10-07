@@ -1,0 +1,42 @@
+export const Tratamientos = [
+    {
+        id: 1, 
+        tratamiento: "Aplicacion de amalgamas",
+        value: false,
+        price: "1500",
+        disabled: false,
+        visible: true,
+    },
+    {
+        id: 2, 
+        tratamiento: "Endodoncia",
+        value: false,
+        price: "1500",
+        disabled: false,
+        visible: true,
+    },
+    {
+        id: 3, 
+        tratamiento: "Corona",
+        value: false,
+        price: "1500",
+        disabled: false,
+        visible: true,
+    },
+    {
+        id: 4, 
+        tratamiento: "Incrustacion",
+        value: false,
+        price: "1500",
+        disabled: false,
+        visible: true,
+    },
+    {
+        id: 5, 
+        tratamiento: "Aplicacion de amalgamas",
+        value: false,
+        price: "1500",
+        disabled: false,
+        visible: true,
+    },
+]

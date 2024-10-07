@@ -45,7 +45,6 @@ body {
   --rdp-background-color-dark: #ACCCF8;
   --rdp-outline: 2px solid var(--rdp-accent-color); /* Outline border for focused elements */
   --rdp-outline-selected: 3px solid var(--rdp-accent-color); /* Outline border for focused _and_ selected elements */
-
   margin: 1em;
 }
 
@@ -731,9 +730,6 @@ body {
   top: 283.26px;
   right: 252.57px;
   bottom: 272px;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
 }
 
 .num-teeth {

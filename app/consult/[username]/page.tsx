@@ -5,8 +5,8 @@ import { Avatar, FormControl, IconButton, Input, InputAdornment, InputLabel } fr
 import { useRouter } from 'next/navigation'
 
 import { consultaInputs } from '../../../src/utils/consult/form-registro'
-import EditIcon from '@mui/icons-material/Edit';
 import { useForm } from 'react-hook-form';
+import EditIcon from '@mui/icons-material/Edit';
 import ConsultDialog from '../../../src/utils/ConsultDialog';
 
 export default function Consult({ params }: { params: { username: string } }) {
@@ -71,7 +71,7 @@ export default function Consult({ params }: { params: { username: string } }) {
 
 				<div className='flex flex-col items-center mt-2 space-y-5 w-full'>
 					<input type="button" onClick={(e) => handleSaveData(e)} disabled={saveData} value={"GUARDAR"} className="h-12 w-full rounded-xl text-secundary-normal bg-primary-pressed shadow-xl text-center disabled:bg-primary-disable" />
-					<input type='button' onClick={() => router.push("/ficha")} value={"INGRESAR FICHA DENTAL"} className="h-12 w-full rounded-xl border border-1 border-primary-pressed bg-secundary-normal text-primary-pressed text-center disabled:border-0 disabled:bg-white disabled:text-primary-disable" />
+					<input type='button' onClick={() => router.push("/consult/sheet")} value={"INGRESAR FICHA DENTAL"} className="h-12 w-full rounded-xl border border-1 border-primary-pressed bg-secundary-normal text-primary-pressed text-center disabled:border-0 disabled:bg-white disabled:text-primary-disable" />
 				</div>
 
 			</div>

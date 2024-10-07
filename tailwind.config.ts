@@ -29,7 +29,7 @@ const config: Config = {
     },
     backgroundImage: {
       'login-pattern': "url('/img/fondo_login.png')"
-    }
+    },
   },
   plugins: [],
 };
