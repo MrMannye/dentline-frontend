@@ -1,7 +1,7 @@
 
 function TabEfectivo() {
 	return (
-		<div>TabEfectivo</div>
+		<div></div>
 	)
 }
 

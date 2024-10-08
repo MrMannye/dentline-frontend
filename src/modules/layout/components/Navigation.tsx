@@ -5,12 +5,16 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import SearchIcon from '@mui/icons-material/Search';
 import AutorenewIcon from '@mui/icons-material/Autorenew';
 
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname, useRouter, redirect } from 'next/navigation';
+import { useWallet } from '../../auth/context/WalletContext';
 
 export default function Navigation() {
 
-	const router = useRouter();
 	const routerPath = usePathname();
+	const {account} = useWallet()
+	if(!account && routerPath !== '/login') redirect('/login')
+
+	const router = useRouter();
 
 	const titleNavigation = (): string => {
 		if (routerPath.includes("pacients")) return "Pacientes";

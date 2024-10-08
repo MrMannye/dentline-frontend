@@ -3,14 +3,14 @@ export const accountInputs = [
       name: "Correo",
       register: "correo",
       value: "miguel.aguilera.ipn@gmail.com ",
-      visible: true,
+      visible: false,
       required: true,
   },
   {
       name: "Telefono",
       register: "telefono",
       value: "5564007133",
-      visible: true,
+      visible: false,
       required: true,
   },
   {
@@ -24,14 +24,14 @@ export const accountInputs = [
       name: "Cuenta CLABE",
       register: "clabe",
       value: "134575 47577 4757 47",
-      visible: true,
+      visible: false,
       required: true,
   },
   {
       name: "Numero de Tarjeta",
       register: "tarjeta",
       value: "1234 6758 8987 9009",
-      visible: true,
+      visible: false,
       required: true,
   },
 ]

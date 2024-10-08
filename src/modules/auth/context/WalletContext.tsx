@@ -1,6 +1,7 @@
 'use client'
 
 import React, { createContext, useState, useContext } from 'react';
+import { redirect } from 'next/navigation'
 import Web3 from 'web3';
 
 interface WalletContextType {
@@ -22,6 +23,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
                 setAccount(accounts[0]);
                 const web3Instance = new Web3((window as any).ethereum);
                 setWeb3(web3Instance);
+                redirect('/')
             } catch (error) {
                 console.error("Error connecting to wallet:", error);
             }
