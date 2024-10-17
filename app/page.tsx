@@ -1,11 +1,10 @@
+/* eslint-disable @next/next/no-img-element */
 'use client'
-
 import { useWallet } from "@/src/modules/auth/context/WalletContext";
 import Dates from '../src/modules/home/Dates';
 import CreateNewFolderIcon from '@mui/icons-material/CreateNewFolder';
 import AddIcon from '@mui/icons-material/Add';
 import Avatar from '../src/utils/Avatar'
-import Image from 'next/image'
 
 export default function Home() {
 	const { account } = useWallet()

@@ -6,7 +6,7 @@ import Link from 'next/link'
 
 function CardDate(props: { name: string, ocupation: string, date: string, id: string }) {
 	return (
-		<Link href={`/dates/${props.id}`}>
+		<Link href={`/pacients/payment/${props.id}`}>
 			<div className='flex justify-around items-center h-[72px] rounded-xl bg-primary-100 mb-4'>
 				<Avatar image={"/img/home_image.png"} />
 				<div className='flex flex-col items-center text-gray-600'>
