@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react"
 import QRCode from 'qrcode'
 import Image from 'next/image'
+import { useWallet } from "../../auth/context/WalletContext"
 
 function TabMetamask() {
 
 	const [qrCode, setQrCode] = useState<string>('')
+	const { account } = useWallet()
 	useEffect(() => {
-		QRCode.toDataURL('https://www.google.com')
+		QRCode.toDataURL(account ?? '')
 			.then(url => {
 				setQrCode(url)
 			})

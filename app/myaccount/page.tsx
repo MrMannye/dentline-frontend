@@ -7,6 +7,7 @@ import { Avatar, FormControl, IconButton, Input, InputAdornment, InputLabel } fr
 import EditIcon from '@mui/icons-material/Edit';
 
 import {accountInputs} from '@/src/modules/dentist/utils/form-data'
+import { useWallet } from '@/src/modules/auth/context/WalletContext';
 
 function page(params: {username: string}) {
 	
@@ -14,6 +15,7 @@ function page(params: {username: string}) {
   const [saveData, setSaveData] = useState(true);
 	const [dentalDisable, setDentalDisable] = useState(true);
 	const [openModal, setOpenModal] = useState(false);
+	const { account } = useWallet()
 
 	const handleSaveData = (e: React.MouseEvent<HTMLInputElement>) => {
 		e.preventDefault();
@@ -52,8 +54,9 @@ function page(params: {username: string}) {
 								<Input
 									id={`standard-adornment-${input.name}`}
 									type={'text'}
+									disabled={input.visible}
 									{...register(input.register, { required: input.required })}
-									value={input.value}
+									value={input.register === 'wallet' ? account : input.value}
 									className='opacity-40 focus-within:opacity-90'
 									endAdornment={
 										<InputAdornment position="end">

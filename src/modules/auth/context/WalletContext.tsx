@@ -2,6 +2,7 @@
 'use client'
 
 import React, { createContext, useState, useContext } from 'react';
+import { redirect } from 'next/navigation'
 import Web3 from 'web3';
 
 interface WalletContextType {
@@ -46,6 +47,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 					cuenta_clabe: "CL1234567890123456",
 					wallet_address: accounts[0]
 				});
+				redirect('/');
 			} catch (error) {
 				console.error("Error connecting to wallet:", error);
 			}
