@@ -37,6 +37,9 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 				setAccount(accounts[0]);
 				const web3Instance = new Web3((window as any).ethereum);
 				setWeb3(web3Instance);
+				const response = await fetch(`${process.env.NEXT_PUBLIC_API}/validDentist/${accounts[0]}`)
+				const {data} = await response.json()
+				console.log(data);
 				setDentist({
 					id_dentista: "1",
 					nombre: "Dr. Juan Pérez",
