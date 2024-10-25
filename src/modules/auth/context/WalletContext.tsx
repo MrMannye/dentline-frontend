@@ -37,20 +37,21 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 				setAccount(accounts[0]);
 				const web3Instance = new Web3((window as any).ethereum);
 				setWeb3(web3Instance);
-				const response = await fetch(`${process.env.NEXT_PUBLIC_API}/validDentist/${accounts[0]}`)
-				const {data} = await response.json()
-				console.log(data);
+				const response = await fetch(`${process.env.NEXT_PUBLIC_API}/dentist/validDentist/${accounts[0]}`)
+				const { data } = await response.json()
+				const user: DentistProps = data[0];
+				console.log(user)
 				setDentist({
-					id_dentista: "1",
-					nombre: "Dr. Juan Pérez",
-					especializacion: "Ortodoncia",
-					telefono: "555-1234",
-					email: "juan.perez@dentista.com",
-					numero_tarjeta: "1234567890123456",
-					cuenta_clabe: "CL1234567890123456",
-					wallet_address: accounts[0]
+					id_dentista: user.id_dentista,
+					nombre: user.nombre,
+					especializacion: user.especializacion,
+					telefono: user.telefono,
+					email: user.email,
+					numero_tarjeta: user.numero_tarjeta,
+					cuenta_clabe: user.cuenta_clabe,
+					wallet_address: user.wallet_address
 				});
-				redirect('/');
+				redirect('/')
 			} catch (error) {
 				console.error("Error connecting to wallet:", error);
 			}
