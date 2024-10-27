@@ -16,7 +16,7 @@ export default function Dates() {
 	const [pacients, setPacients] = useState<Pacient[]>([])
 	useEffect(() => {
 		const fetchData = async () => {
-			console.log(process.env.NEXT_PUBLIC_API)
+			console.log(process.env.NEXT_PUBLIC_API, dentist?.id_dentista)
 			const response = await fetch(`${process.env.NEXT_PUBLIC_API}/dentist/nextDate/${dentist?.id_dentista}`)
 			const { data } = await response.json()
 			setPacients(data)

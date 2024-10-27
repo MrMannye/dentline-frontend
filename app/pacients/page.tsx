@@ -11,22 +11,22 @@ import { useEffect, useState } from 'react';
 import { useWallet } from '@/src/modules/auth/context/WalletContext';
 
 interface Paciente {
-  id_paciente: number;
-  nombre_paciente: string;
+	id_paciente: number;
+	nombre_paciente: string;
 }
 
 export default function Pacients() {
 
 	const { dentist } = useWallet()
-  const [pacientes, setPacientes] = useState<Paciente[]>([])
-  useEffect(() => {
-      const fetchData = async () => {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API}/dentist/allPacients/${dentist?.id_dentista}`)
-				const data = await response.json()
-        setPacientes(data.data);
-      }
-      fetchData()
-  }, []);
+	const [pacientes, setPacientes] = useState<Paciente[]>([])
+	useEffect(() => {
+		const fetchData = async () => {
+			const response = await fetch(`${process.env.NEXT_PUBLIC_API}/dentist/allPacients/${dentist?.id_dentista}`)
+			const data = await response.json()
+			setPacientes(data.data);
+		}
+		fetchData()
+	}, [dentist]);
 
 	const listArray: Array<string> = [];
 	const addtoArray = (letter: string): string => {
@@ -37,7 +37,7 @@ export default function Pacients() {
 			return "";
 		}
 	}
-	
+
 	return (
 		<div className='px-4 space-y-4 w-full flex-1'>
 			{pacientes.map((paciente) => {
