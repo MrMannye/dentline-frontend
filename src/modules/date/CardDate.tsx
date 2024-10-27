@@ -1,9 +1,12 @@
 import DeleteIcon from '@mui/icons-material/Delete';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import { useRouter } from 'next/navigation';
+
 
 import Link from 'next/link'
 
 export default function CardDate() {
+	const router = useRouter();
 	return (
 		<Link href={`pacients/payment/${"Miguel Aguilera"}`} className='rounded-xl flex flex-col'>
 			<span className='bg-acent-color text-white text-center rounded-t-xl tracking-wide'>Miguel Aguilera</span>
@@ -14,7 +17,7 @@ export default function CardDate() {
 				puede estar afectada.
 			</div>
 			<div className='bg-primary-200 w-full flex items-center justify-around rounded-b-xl p-1'>
-				<Link href={'/date'}><CalendarMonthIcon className='text-primary-color mx-3 text-base' /></Link>
+				<CalendarMonthIcon onClick={() => router.push('/date')} className='text-primary-color mx-3 text-base' />
 				<DeleteIcon className='text-primary-color mx-3 text-base' />
 			</div>
 		</Link>
