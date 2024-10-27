@@ -159,7 +159,7 @@ export default function Pacient() {
 					/>
 				</FormControl>
 			</section>
-			<div className="flex flex-col items-center">
+			<div className="flex flex-col items-center mt-4">
 				<button
 					className={`h-12 w-44 rounded-xl border border-1 border-primary-pressed bg-secundary-normal flex items-center justify-center mb-2 disabled:opacity-35 text-primary-pressed`}
 					disabled={!isChanged}
