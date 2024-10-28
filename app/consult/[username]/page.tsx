@@ -17,13 +17,36 @@ export default function Consult({ params }: { params: { username: string } }) {
 	const [saveData, setSaveData] = useState(true);
 	const [dentalDisable, setDentalDisable] = useState(true);
 	const [openModal, setOpenModal] = useState(false);
+	const id_paciente = params.username.split("_")[1];
+	console.log(id_paciente);
 
 	const handleSaveData = (e: React.MouseEvent<HTMLInputElement>) => {
 		e.preventDefault();
-		const { peso, estatura, sangre, pulso, presion, temperatura } = getValues();
-		console.log(peso, pulso, temperatura, presion, estatura, sangre)
+		const { peso, alergias, sangre, pulso, presion, antecedentes_medicos } = getValues();
+		console.log(peso, pulso, antecedentes_medicos, presion, alergias, sangre)
 		setOpenModal(true);
+		fetch(`${process.env.NEXT_PUBLIC_API}/pacients/updateVitalSigns`, {
+			method: 'PUT',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				tipo_sangre: sangre,
+				antecedentes_medicos: antecedentes_medicos,
+				peso: peso,
+				pulso: pulso,
+				presion: presion,
+				alergias: alergias,
+				id_paciente: id_paciente
+			})
+		})
+			.then(response => response.json())
+			.then(data => {
+				console.log(data);
+			})
+			.catch(error => console.log(error));
 	}
+
 	console.log(dentalDisable, errors, handleSubmit)
 	useEffect(() => {
 		if (isValid) {
@@ -41,7 +64,7 @@ export default function Consult({ params }: { params: { username: string } }) {
 			{openModal && <ConsultDialog setDentalDisable={setDentalDisable} setSaveData={setSaveData} description={description} title={"Guardar"} />}
 			<div className='bg-secundary-color h-16 mb-12 flex items-center px-4 space-x-2'>
 				<Avatar className='mt-10' sx={{ width: 82, height: 82 }} src={"/img/home_image.png"} alt="User Image" />
-				<h2 className='text-xl text-primary-color'>{params.username.replace("%20", " ")}</h2>
+				<h2 className='text-xl text-primary-color'>{params.username.replace("%20", " ").split("_")[0]}</h2>
 			</div>
 			<div className='px-4 flex flex-col items-start'>
 				<h3 className='text-xl font-bold text-acent-color'>Signos Vitales</h3>

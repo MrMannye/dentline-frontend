@@ -23,19 +23,20 @@ interface Pacient {
 
 export default function Pacient() {
 	const [isChanged, setIsChanged] = useState(false);
-	const { register, getValues, formState: { errors, isValid }, handleSubmit } = useForm();
+	const { register, getValues, reset } = useForm();
 	const id_paciente = 21;
 	const [pacient, setPacient] = useState<Pacient>();
-	console.log(isValid, errors, handleSubmit)
 	useEffect(() => {
 		const fetchData = async () => {
 			const response = await fetch(`${process.env.NEXT_PUBLIC_API}/pacients/${id_paciente}`);
 			const { data } = await response.json();
-			console.log(data[0]);
-			setPacient(data[0]);
+			const pacientData = data[0];
+			console.log(pacientData);
+			setPacient(pacientData);
+			reset({ direccion: pacientData.direccion, profesion: pacientData.profesion, edad: pacientData.edad, estado_civil: pacientData.estado_civil });
 		}
 		fetchData();
-	}, [id_paciente]);
+	}, []);
 
 	const handleSaveData = (e: React.MouseEvent<HTMLButtonElement>) => {
 		e.preventDefault();
@@ -60,6 +61,22 @@ export default function Pacient() {
 			})
 			.catch(error => console.log(error));
 	};
+
+	const checkChanges = () => {
+		const { direccion, profesion, edad, estado_civil } = getValues();
+		console.log(direccion, profesion, edad, estado_civil);
+		if (direccion !== pacient?.direccion) {
+			setIsChanged(true);
+		} else if (profesion !== pacient?.profesion) {
+			setIsChanged(true);
+		} else if (edad !== pacient?.edad) {
+			setIsChanged(true);
+		} else if (estado_civil !== pacient?.estado_civil) {
+			setIsChanged(true);
+		} else {
+			setIsChanged(false);
+		}
+	}
 
 	return (
 		<div className='w-full flex flex-col flex-1'>
@@ -88,11 +105,11 @@ export default function Pacient() {
 			</div>
 			<section className='mx-3 mt-8'>
 				<FormControl sx={{ m: 1 }} className='w-full' variant="standard">
-					<InputLabel htmlFor="direccion">Direccion</InputLabel>
+					<InputLabel shrink htmlFor="direccion">Direccion</InputLabel>
 					<Input id="direccion"
 						type='text'
-						defaultValue={pacient?.direccion}
 						{...register('direccion', { required: true })}
+						onKeyUpCapture={() => checkChanges()}
 						className='opacity-40 focus-within:opacity-90'
 						endAdornment={
 							<InputAdornment position="end">
@@ -105,12 +122,12 @@ export default function Pacient() {
 				</FormControl>
 
 				<FormControl sx={{ marginY: 0.8, marginX: 1 }} className='w-full' variant="standard">
-					<InputLabel htmlFor="profesion">Profesion</InputLabel>
+					<InputLabel shrink htmlFor="profesion">Profesion</InputLabel>
 					<Input
 						id="profesion"
 						type='text'
-						defaultValue={pacient?.profesion}
 						{...register('profesion', { required: true })}
+						onKeyUpCapture={() => checkChanges()}
 						className='opacity-40 focus-within:opacity-90'
 						endAdornment={
 							<InputAdornment position="end">
@@ -122,13 +139,13 @@ export default function Pacient() {
 					/>
 				</FormControl>
 
-				<FormControl sx={{ m: 1 }} className='w-full' variant="standard">
-					<InputLabel htmlFor={`standard-adornment-edad`}>Edad</InputLabel>
+				<FormControl sx={{ marginY: 0.8, marginX: 1 }} className='w-full' variant="standard">
+					<InputLabel shrink htmlFor={`standard-adornment-edad`}>Edad</InputLabel>
 					<Input
 						id={`standard-adornment-edad`}
 						type='number'
-						defaultValue={pacient?.edad}
 						{...register('edad', { required: true })}
+						onKeyUpCapture={() => checkChanges()}
 						className='opacity-40 focus-within:opacity-90'
 						endAdornment={
 							<InputAdornment position="end">
@@ -141,13 +158,12 @@ export default function Pacient() {
 				</FormControl>
 
 				<FormControl sx={{ m: 1 }} className='w-full' variant="standard">
-					<InputLabel htmlFor="estado_civil">Estado Civil</InputLabel>
+					<InputLabel shrink htmlFor="estado_civil">Estado Civil</InputLabel>
 					<Input
 						id="estado_civil"
 						type='text'
-						onKeyDown={() => setIsChanged(true)}
-						defaultValue={pacient?.estado_civil}
 						{...register('estado_civil', { required: true })}
+						onKeyUpCapture={() => checkChanges()}
 						className='opacity-40 focus-within:opacity-90'
 						endAdornment={
 							<InputAdornment position="end">
@@ -176,7 +192,7 @@ export default function Pacient() {
 						CITA
 					</Link>
 					<Link
-						href={`/consult/${pacient?.nombre_paciente}`}
+						href={`/consult/${pacient?.nombre_paciente}_${id_paciente}`}
 						className="h-12 w-44 rounded-xl text-secundary-normal bg-primary-pressed shadow-xl flex items-center justify-center"
 					>
 						CONSULTA
