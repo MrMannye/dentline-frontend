@@ -40,7 +40,7 @@ function Account() {
 		})
 	}, [dentist, reset, account])
 
-	const handleSaveData = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+	const handleSaveData = (e: React.MouseEvent<HTMLInputElement>) => {
 		e.preventDefault();
 		const { correo, nombre, telefono, clabe, tarjeta, } = getValues();
 		console.log(correo, nombre, telefono, clabe, tarjeta, dentist?.id_dentista)
@@ -123,7 +123,7 @@ function Account() {
 				}
 
 				<div className='flex flex-col items-center w-full'>
-					<button onClick={(e) => handleSaveData(e)} disabled={!saveData} value={"GUARDAR"} className="h-12 w-full rounded-xl text-secundary-normal bg-primary-pressed shadow-xl text-center disabled:bg-primary-disable" />
+					<input type='button' onClick={(e) => handleSaveData(e)} disabled={!saveData} value={"GUARDAR"} className="h-12 w-full rounded-xl text-secundary-normal bg-primary-pressed shadow-xl text-center disabled:bg-primary-disable" />
 				</div>
 
 			</div>
