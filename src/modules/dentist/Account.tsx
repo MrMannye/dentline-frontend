@@ -123,7 +123,7 @@ function Account() {
 				}
 
 				<div className='flex flex-col items-center w-full'>
-					<input type='button' onClick={(e) => handleSaveData(e)} disabled={!saveData} value={"GUARDAR"} className="h-12 w-full rounded-xl text-secundary-normal bg-primary-pressed shadow-xl text-center disabled:bg-primary-disable" />
+					<input type='button' onClick={(e) => handleSaveData(e)} disabled={saveData} value={"GUARDAR"} className="h-12 w-full rounded-xl text-secundary-normal bg-primary-pressed shadow-xl text-center disabled:bg-primary-disable" />
 				</div>
 
 			</div>

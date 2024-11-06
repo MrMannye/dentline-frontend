@@ -7,8 +7,8 @@ export const consultaInputs = [
       required: true,
   },
   {
-      name: "Estatura",
-      register: "estatura",
+      name: "Alergias",
+      register: "alergias",
       value: "",
       visible: true,
       required: true,
@@ -35,8 +35,8 @@ export const consultaInputs = [
       required: true,
   },
   {
-      name: "Temperatura",
-      register: "temperatura",
+      name: "Antecedentes medicos",
+      register: "antecedentes_medicos",
       value: "",
       visible: true,
       required: true,
