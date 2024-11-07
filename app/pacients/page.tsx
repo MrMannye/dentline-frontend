@@ -44,7 +44,7 @@ export default function Pacients() {
 				return (
 					<div key={paciente.id_paciente} className="flex items-center space-x-4">
 						<span className='text-3xl font-normal text-acent-color w-5'>{addtoArray(paciente.nombre_paciente.charAt(0))}</span>
-						<Link href={`/pacients/${paciente.nombre_paciente}`} className="flex items-center space-x-4">
+						<Link href={`/pacients/${paciente.nombre_paciente}_${paciente.id_paciente}`} className="flex items-center space-x-4">
 							<Avatar image={"/img/home_image.png"} />
 							<span className='text-base'>{paciente.nombre_paciente}</span>
 						</Link>

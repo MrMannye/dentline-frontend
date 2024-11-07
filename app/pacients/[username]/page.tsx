@@ -21,10 +21,10 @@ interface Pacient {
 	estado_civil: string;
 }
 
-export default function Pacient() {
+export default function Pacient({ params }: { params: { username: string } }) {
 	const [isChanged, setIsChanged] = useState(false);
 	const { register, getValues, reset } = useForm();
-	const id_paciente = 21;
+	const id_paciente = params.username.split("_")[1];
 	const [pacient, setPacient] = useState<Pacient>();
 	useEffect(() => {
 		const fetchData = async () => {
