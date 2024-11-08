@@ -6,8 +6,8 @@ interface PatientContextType {
 }
 
 interface PatientProps {
-	id_paciente: number;
-	nombre: string;
+	id_paciente: string;
+	nombre_paciente: string;
 	profesion: string;
 	edad: number;
 	estado_civil: string;

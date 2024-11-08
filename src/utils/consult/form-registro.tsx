@@ -15,7 +15,7 @@ export const consultaInputs = [
   },
   {
       name: "Tipo de Sangre",
-      register: "sangre",
+      register: "tipo_sangre",
       value: "",
       visible: true,
       required: true,

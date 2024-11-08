@@ -8,8 +8,9 @@ export default function Dental() {
 	const router = useRouter();
 	const [saveDataTeeth, setSaveDataTeeth] = useState<boolean>(false);
 	const handleSelectTooth = (tooth: string): void => {
-		if (selectedTeeth.includes(tooth)) setSelectedTeeth(selectedTeeth.filter(toothF => toothF !== tooth));
-		else setSelectedTeeth([...selectedTeeth, tooth]);
+		if (selectedTeeth.includes(tooth)){
+			setSelectedTeeth(selectedTeeth.filter(toothF => toothF !== tooth));
+		} else setSelectedTeeth([...selectedTeeth, tooth]);
 		console.log(selectedTeeth);
 	}
 	const isSelected = (tooth: string) => {

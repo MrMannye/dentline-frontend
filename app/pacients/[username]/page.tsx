@@ -8,31 +8,19 @@ import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
 import EmailIcon from '@mui/icons-material/Email';
 import EditIcon from '@mui/icons-material/Edit';
 import Avatar from '@mui/material/Avatar';
-
-interface Pacient {
-	id_paciente: number;
-	nombre_paciente: string;
-	profesion: string;
-	edad: number;
-	fecha_nacimiento: Date;
-	direccion: string;
-	telefono: string;
-	email: string;
-	estado_civil: string;
-}
+import { usePatient } from '@/src/modules/patients/context/PatientContext';
 
 export default function Pacient({ params }: { params: { username: string } }) {
 	const [isChanged, setIsChanged] = useState(false);
 	const { register, getValues, reset } = useForm();
 	const id_paciente = params.username.split("_")[1];
-	const [pacient, setPacient] = useState<Pacient>();
+	const { patient, setPatient} = usePatient();
 	useEffect(() => {
 		const fetchData = async () => {
 			const response = await fetch(`${process.env.NEXT_PUBLIC_API}/pacients/${id_paciente}`);
 			const { data } = await response.json();
 			const pacientData = data[0];
-			console.log(pacientData);
-			setPacient(pacientData);
+			setPatient({"id_paciente": id_paciente, ...pacientData});
 			reset({ direccion: pacientData.direccion, profesion: pacientData.profesion, edad: pacientData.edad, estado_civil: pacientData.estado_civil });
 		}
 		fetchData();
@@ -65,13 +53,13 @@ export default function Pacient({ params }: { params: { username: string } }) {
 	const checkChanges = () => {
 		const { direccion, profesion, edad, estado_civil } = getValues();
 		console.log(direccion, profesion, edad, estado_civil);
-		if (direccion !== pacient?.direccion) {
+		if (direccion !== patient?.direccion) {
 			setIsChanged(true);
-		} else if (profesion !== pacient?.profesion) {
+		} else if (profesion !== patient?.profesion) {
 			setIsChanged(true);
-		} else if (edad !== pacient?.edad) {
+		} else if (edad !== patient?.edad) {
 			setIsChanged(true);
-		} else if (estado_civil !== pacient?.estado_civil) {
+		} else if (estado_civil !== patient?.estado_civil) {
 			setIsChanged(true);
 		} else {
 			setIsChanged(false);
@@ -83,23 +71,23 @@ export default function Pacient({ params }: { params: { username: string } }) {
 			<div className='flex items-center justify-around w-full bg-secundary-color text-white p-2'>
 				<h3 className='text-center'>PERFIL</h3>
 				<h3 className='text-center'>DATOS</h3>
-				<Link className='' href={`/pacients/historial/${pacient?.nombre_paciente}`}>
+				<Link className='' href={`/pacients/historial/${patient?.nombre_paciente}`}>
 					<h3 className='text-center'>HISTORIAL</h3>
 				</Link>
 			</div>
 
 			<div className='relative bg-primary-color flex flex-col items-center text-white py-8'>
 				<Avatar alt="Image Avatar" src={"/img/home_image.png"} sx={{ width: 82, height: 82 }} />
-				<h2 className="text-2xl mt-2">{pacient?.nombre_paciente}</h2>
+				<h2 className="text-2xl mt-2">{patient?.nombre_paciente}</h2>
 
 				<div className='absolute -bottom-5 flex items-center justify-around text-white bg-primary-500 p-2 space-x-5'>
 					<div className='flex items-center space-x-1'>
 						<LocalPhoneIcon />
-						<span>{pacient?.telefono}</span>
+						<span>{patient?.telefono}</span>
 					</div>
 					<div className='flex items-center space-x-1'>
 						<EmailIcon />
-						<span>{pacient?.email}</span>
+						<span>{patient?.email}</span>
 					</div>
 				</div>
 			</div>
@@ -192,7 +180,7 @@ export default function Pacient({ params }: { params: { username: string } }) {
 						CITA
 					</Link>
 					<Link
-						href={`/consult/${pacient?.nombre_paciente}_${id_paciente}`}
+						href={`/consult/${patient?.nombre_paciente}`}
 						className="h-12 w-44 rounded-xl text-secundary-normal bg-primary-pressed shadow-xl flex items-center justify-center"
 					>
 						CONSULTA

@@ -1,7 +1,6 @@
 import React from 'react'
 
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
 import SearchIcon from '@mui/icons-material/Search';
 import AutorenewIcon from '@mui/icons-material/Autorenew';
 
@@ -38,8 +37,6 @@ export default function Navigation() {
 					</div>
 					:
 					<div className='flex items-center space-x-4 justify-between'>
-						<SearchIcon />
-						<MoreVertIcon />
 					</div>
 			}
 		</div>
