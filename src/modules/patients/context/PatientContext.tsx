@@ -6,16 +6,16 @@ export interface PatientContextType {
 }
 
 export interface PatientProps {
-	id_paciente: string;
-	nombre_paciente: string;
-	profesion: string;
-	edad: number;
-	estado_civil: string;
-	fecha_nacimiento: string; // formato: YYYY-MM-DD
-	direccion: string;
-	telefono: string;
-	email: string;
-	teeths: string[];
+	id_paciente?: string;
+	nombre_paciente?: string;
+	profesion?: string;
+	edad?: number;
+	estado_civil?: string;
+	fecha_nacimiento?: string; // formato: YYYY-MM-DD
+	direccion?: string;
+	telefono?: string;
+	email?: string;
+	teeths?: string[];
 }
 
 
