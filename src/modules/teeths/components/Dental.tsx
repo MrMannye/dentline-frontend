@@ -2,10 +2,13 @@
 import React, { useState } from 'react'
 import { Teeth } from '../utils/Teeth';
 import { useRouter } from 'next/navigation';
+import { usePatient } from '../../patients/context/PatientContext';
+import { PatientProps } from '../../patients/context/PatientContext';
 
 export default function Dental() {
 	const [selectedTeeth, setSelectedTeeth] = useState<string[]>([]);
 	const router = useRouter();
+	const {patient, setPatient} = usePatient();
 	const [saveDataTeeth, setSaveDataTeeth] = useState<boolean>(false);
 	const handleSelectTooth = (tooth: string): void => {
 		if (selectedTeeth.includes(tooth)){
@@ -18,6 +21,10 @@ export default function Dental() {
 	}
 
 	const saveData = () => {
+		setPatient((prevPatient: PatientProps) => ({
+			...prevPatient,
+			teeths: selectedTeeth
+	}));
 		setSaveDataTeeth(true);
 		setTimeout(() => {
 			router.push("/consult/treatments")

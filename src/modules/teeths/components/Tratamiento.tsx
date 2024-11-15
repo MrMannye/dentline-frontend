@@ -3,12 +3,14 @@ import { Tratamientos } from '../utils/InputsTratamiento'
 import React, { useState } from 'react'
 import ConsultDialog from '../../../utils/ConsultDialog';
 
-export default function Tratamiento() {
+export default function Tratamiento({ params }: { params: { teeths: string } }) {
   
   const [openModal, setOpenModal] = useState(false);
   const [dentalDisable, setDentalDisable] = useState(true);
   const [saveData, setSaveData] = useState(true);
   const description = "Hacer cita ¿Estás seguro de que quieres agendar la cita?";
+
+  //console.log(params.teeths.split("_")[1].split("-"));
 
   
   return (
@@ -16,28 +18,12 @@ export default function Tratamiento() {
       { openModal && <ConsultDialog setDentalDisable={setDentalDisable} setSaveData={setSaveData} description={description} title={"Hacer cita"}/>}
       <h1 className='text-acent-color tracking-wide font-semibold text-lg'>Piezas dentales y tratamientos</h1>
       <div className='space-y-3 mt-6'>
-        {[1, 2, 3].map((tooth) => {
+        {[1,2,3].map((tooth) => {
           return (
             <div key={tooth} className='flex items-center'>
-              <h3 className='text-xl p-2 font-semibold rounded-l-lg text-white bg-primary-500'>15</h3>
+              <h3 className='h-full text-xl p-3 font-semibold rounded-l-lg text-white bg-primary-500'>15</h3>
               <FormControl size='small' fullWidth style={{ padding: 0, margin: 0 }}>
-                <InputLabel id="tratamiento">Selecciona Tratamiento</InputLabel>
-                <Select
-                  labelId="tratamiento"
-                  id="demo-simple-select"
-                  // value={age}
-                  label="Tratamiento"
-                  className='p-[2px] rounded-none rounded-r-lg'
-                // onChange={handleChange}
-                >
-                  {
-                    Tratamientos.map(tratamiento => {
-                      return (
-                        <MenuItem key={tratamiento.id} value={tratamiento.tratamiento}>{tratamiento.tratamiento}</MenuItem>
-                      )
-                    })
-                  }
-                </Select>
+              <TextField id="outlined-basic" label="Ingrese el tratamiento" className="rounded-l-lg mb-3" />
               </FormControl>
             </div>
           )

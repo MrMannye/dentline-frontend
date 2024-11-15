@@ -1,11 +1,11 @@
 import React, { createContext, useState, useContext } from 'react';
 
-interface PatientContextType {
+export interface PatientContextType {
 	patient: PatientProps | null;
 	setPatient: (patient: PatientProps) => void;
 }
 
-interface PatientProps {
+export interface PatientProps {
 	id_paciente: string;
 	nombre_paciente: string;
 	profesion: string;
@@ -15,7 +15,9 @@ interface PatientProps {
 	direccion: string;
 	telefono: string;
 	email: string;
+	teeths: string[];
 }
+
 
 export const PatientContext = createContext<PatientContextType | undefined>(undefined);
 
@@ -36,3 +38,4 @@ export const usePatient = (): PatientContextType => {
 	}
 	return context;
 };
+
