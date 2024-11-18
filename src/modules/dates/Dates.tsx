@@ -1,8 +1,9 @@
+import { TextField } from '@mui/material';
 import { useEffect, useState } from 'react';
 import React from 'react';
 
 import { DayPicker } from 'react-day-picker';
-import "react-day-picker/style.css";
+import { Input } from '@mui/material'
 
 export default function Dates(props: { setSection: (section: string) => void }) {
 
@@ -13,13 +14,7 @@ export default function Dates(props: { setSection: (section: string) => void }) 
 	const [horarioI, setHorarioI] = useState("");
 	const [valid, setValid] = useState(true);
 	const disabledDays = [
-		new Date(2024, 8, 1),
-		new Date(2024, 8, 12),
-		new Date(2024, 8, 20),
-		new Date(2024, 8, 11),
-		new Date(2024, 8, 15),
-		new Date(2024, 8, 26),
-		{ from: new Date(2023, 2, 18), to: new Date(2023, 2, 20) }
+		{ before: new Date() }
 	];
 	const horarios = [
 		{
@@ -57,9 +52,17 @@ export default function Dates(props: { setSection: (section: string) => void }) 
 				mode="single"
 				selected={days}
 				onSelect={setDays}
-				disabled={disabledDays}
+				disabled={day => {
+					const today = new Date();
+					today.setHours(0, 0, 0, 0); 
+					return day < today; // Compara los días sin tener en cuenta la hora
+			}}
 				defaultMonth={new Date()}
-				classNames={{ disabled: 'bg-gray-200', selected: 'bg-acent-color text-white rounded-lg', today: 'text-acent-color' }}
+				classNames={{
+						disabled: 'bg-gray-200',
+						selected: 'bg-acent-color text-white rounded-lg',
+						today: 'text-acent-color'
+				}}
 				className={"p-2 mx-auto"}
 			/>
 
@@ -72,13 +75,30 @@ export default function Dates(props: { setSection: (section: string) => void }) 
 			<div className='mt-3 mx-5'>
 				<h3 className='text-lg items-start text-[#595959] font-semibold'>Horarios disponibles</h3>
 				<div className='flex items-center space-x-3 mt-2'>
-					{horarios.map((horario) => {
-						return (
-							<span onClick={() => selectHorario(horario.horarioInicio)} className={`w-[121px] flex items-center justify-center cursor-pointer rounded-lg h-[42px] font-semibold text-[#7B8794] bg-[#E3E7EB] ${horario.horarioInicio === horarioI && "bg-acent-color text-[#FFFFFF]"}`} key={horario.id}>
-								{horario.horarioInicio} - {horario.horarioFin}
-							</span>
-						)
-					})}
+				<form noValidate>
+						<Input
+						id="time"
+						type="time"
+						defaultValue="07:30"
+						inputProps={{
+							step: 1800, // 5 minutos
+						}}
+					/>
+				</form>
+					<form noValidate>
+						<TextField
+							id="time"
+							label="Hora de fin"
+							type="time"
+							defaultValue="07:30"
+							InputLabelProps={{
+								shrink: true,
+							}}
+							inputProps={{
+								step: 1800, // 30 min
+							}}
+						/>
+					</form>
 				</div>
 				<button onClick={(e) => handleSubmit(e)} disabled={valid} value={"CONTINUAR"} className="h-12 w-full mt-10 rounded-xl bg-primary-pressed text-white shadow-xl text-center disabled:border-0 disabled:bg-[#FFCD9F] disabled:text-white">
 					CONTINUAR

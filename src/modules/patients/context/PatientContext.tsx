@@ -16,6 +16,8 @@ export interface PatientProps {
 	telefono?: string;
 	email?: string;
 	teeths?: string[];
+	tratamiento?: string[];
+	observaciones?: string[];
 }
 
 
