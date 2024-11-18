@@ -1,13 +1,12 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { FormControl, TextField } from '@mui/material'
+'use client'
+import { FormControl, Input, InputAdornment, InputLabel, MenuItem, Select, TextField } from '@mui/material'
+import { Tratamientos } from '../utils/InputsTratamiento'
 import React, { useState } from 'react'
 import ConsultDialog from '../../../utils/ConsultDialog';
-import { usePatient } from '../../patients/context/PatientContext';
 
-export default function Tratamiento() {
+export default function Tratamiento({ params }: { params: { teeths: string } }) {
 
 	const [openModal, setOpenModal] = useState(false);
-	const { patient } = usePatient();
 	const [dentalDisable, setDentalDisable] = useState(true);
 	const [saveData, setSaveData] = useState(true);
 	const description = "Hacer cita ¿Estás seguro de que quieres agendar la cita?";
@@ -20,7 +19,7 @@ export default function Tratamiento() {
 			{openModal && <ConsultDialog setDentalDisable={setDentalDisable} setSaveData={setSaveData} description={description} title={"Hacer cita"} />}
 			<h1 className='text-acent-color tracking-wide font-semibold text-lg'>Piezas dentales y tratamientos</h1>
 			<div className='space-y-3 mt-6'>
-				{patient?.teeths?.map((tooth) => {
+				{[1, 2, 3].map((tooth) => {
 					return (
 						<div key={tooth} className='flex items-center'>
 							<h3 className='h-full text-xl p-3 font-semibold rounded-l-lg text-white bg-primary-500'>15</h3>
