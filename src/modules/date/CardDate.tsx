@@ -8,7 +8,7 @@ import { useWallet } from '@/src/modules/auth/context/WalletContext';
 
 import Link from 'next/link'
 
-interface DatesRecap{
+interface DatesRecap {
 	id_cita: number,
 	nombre_paciente: string,
 	fecha_cita: string,
@@ -19,8 +19,8 @@ interface DatesRecap{
 
 export default function CardDate() {
 	const [dataDates, setDataDates] = useState<DatesRecap[]>([]);
-	const [searchTerm, setSearchTerm] = useState<string>(''); 
-  const [filteredPacientes, setFilteredPacientes] = useState<DatesRecap[]>([]);
+	const [searchTerm, setSearchTerm] = useState<string>('');
+	const [filteredPacientes, setFilteredPacientes] = useState<DatesRecap[]>([]);
 	const router = useRouter();
 	const { dentist } = useWallet()
 
@@ -35,24 +35,24 @@ export default function CardDate() {
 	}, [dentist]);
 
 	const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const query = event.target.value;
-    setSearchTerm(query);
+		const query = event.target.value;
+		setSearchTerm(query);
 
-    if (query.trim() === '') {
-      setFilteredPacientes(dataDates); 
-    } else {
-      const filtered = filteredPacientes.filter(date =>
-        date.nombre_paciente.toLowerCase().includes(query.toLowerCase())
-      );
-      setFilteredPacientes(filtered);
-    }
-  };
+		if (query.trim() === '') {
+			setFilteredPacientes(dataDates);
+		} else {
+			const filtered = filteredPacientes.filter(date =>
+				date.nombre_paciente.toLowerCase().includes(query.toLowerCase())
+			);
+			setFilteredPacientes(filtered);
+		}
+	};
 
 	return (
 		<>
 			<div className="relative flex items-center border-2 border-gray-300 rounded-lg">
-				<input 
-					type="text" 
+				<input
+					type="text"
 					value={searchTerm}
 					onChange={handleSearch}
 					placeholder="Buscar cita..."
@@ -66,14 +66,14 @@ export default function CardDate() {
 						<span className='bg-acent-color text-white text-center rounded-t-xl tracking-wide'>{date.nombre_paciente}</span>
 						<div className='text-xs mx-4 my-2 flex flex-col space-y-[3px]'>
 							<h3 className='font-bold text-gray-700'>Costo: <span className='font-normal text-gray-400'>${date.costo_total}</span></h3>
-							<h3 className='font-bold text-gray-700'>Fecha: <span className='font-normal text-gray-400'>{date.fecha_cita.split("T",1)}</span></h3>
-							<h3 className='font-bold text-gray-700'>Hora: <span className='font-normal text-gray-400'>{date.hora_cita.split("",5)}</span></h3>
+							<h3 className='font-bold text-gray-700'>Fecha: <span className='font-normal text-gray-400'>{date.fecha_cita.split("T", 1)}</span></h3>
+							<h3 className='font-bold text-gray-700'>Hora: <span className='font-normal text-gray-400'>{date.hora_cita.split("", 5)}</span></h3>
 							<h3 className='font-bold text-gray-700'>Observaciones: <span className='font-normal text-gray-400'>{date.observaciones}</span></h3>
 						</div>
 						<div className='bg-primary-200 w-full flex items-center justify-around rounded-b-xl p-1'>
-							<CalendarMonthIcon className='text-primary-color mx-3 text-base' onClick = {() => router.push("/date")} />
-								<DeleteIcon className='text-primary-color mx-3 text-base' />
-							</div>
+							<CalendarMonthIcon className='text-primary-color mx-3 text-base' onClick={() => router.push("/date")} />
+							<DeleteIcon className='text-primary-color mx-3 text-base' />
+						</div>
 					</Link>
 				)
 			})}

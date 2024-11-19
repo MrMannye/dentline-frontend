@@ -18,6 +18,8 @@ export interface PatientProps {
 	teeths?: string[];
 	tratamiento?: string[];
 	observaciones?: string[];
+	fecha_start_cita?: Date | null; // formato: YYYY-MM-DD
+	fecha_end_cita?: Date | null; // formato: YYYY-MM-DD
 }
 
 

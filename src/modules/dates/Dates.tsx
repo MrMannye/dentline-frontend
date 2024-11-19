@@ -10,6 +10,8 @@ import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import "react-day-picker/style.css";
 import { TimeView } from '@mui/x-date-pickers';
 import { Dayjs } from 'dayjs';
+import { usePatient } from '../patients/context/PatientContext';
+import { se } from 'date-fns/locale';
 
 interface disabledHour {
 	disabledHours: number;
@@ -23,6 +25,7 @@ export default function Dates(props: { setSection: (section: string) => void }) 
 	const [startTime, setStartTime] = useState<Dayjs | null>(null);
 	const [endTime, setEndTime] = useState<Dayjs | null>(null);
 	const [disabledHours, setDisabledHours] = useState<number[]>([]);
+	const { patient, setPatient } = usePatient();
 
 	const shouldDisableTime = (value: Dayjs, view: TimeView): boolean => {
 		if (view === 'hours') {
@@ -37,8 +40,11 @@ export default function Dates(props: { setSection: (section: string) => void }) 
 		return `${year}-${month}-${day}`;
 	}
 
-	const handleSubmit = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+	const handleSaveDate = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
 		e.preventDefault()
+		const startDate = days ? new Date(days.setHours(startTime?.hour() || 0, startTime?.minute() || 0)) : null;
+		const endDate = days ? new Date(days.setHours(endTime?.hour() || 0, endTime?.minute() || 0)) : null;
+		setPatient({ ...patient, fecha_start_cita: startDate, fecha_end_cita: endDate })
 		props.setSection("Service");
 	}
 
@@ -118,7 +124,7 @@ export default function Dates(props: { setSection: (section: string) => void }) 
 						/>
 					</LocalizationProvider>
 				</div>
-				<button onClick={(e) => handleSubmit(e)} disabled={valid} value={"CONTINUAR"} className="h-12 w-full mt-10 rounded-xl bg-primary-pressed text-white shadow-xl text-center disabled:border-0 disabled:bg-[#FFCD9F] disabled:text-white">
+				<button onClick={(e) => handleSaveDate(e)} disabled={valid} value={"CONTINUAR"} className="h-12 w-full mt-10 rounded-xl bg-primary-pressed text-white shadow-xl text-center disabled:border-0 disabled:bg-[#FFCD9F] disabled:text-white">
 					CONTINUAR
 				</button>
 			</div>

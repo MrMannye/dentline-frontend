@@ -9,20 +9,20 @@ import PaymentCard from '@/src/modules/payment/PaymentCard'
 import { Input, InputAdornment, IconButton, FormControl, InputLabel } from '@mui/material';
 import PaymentDialog from '@/src/modules/payment/PaymentDialog';
 
-interface DatePacient{
+interface DatePacient {
 	motivo: string,
-  costo_total: number,
-  fecha_cita: string,
-  abono: number,
-  observaciones: string,
+	costo_total: number,
+	fecha_cita: string,
+	abono: number,
+	observaciones: string,
 	nombre: string,
-  telefono: string,
-  email: string
+	telefono: string,
+	email: string
 }
 
 export default function Payment({ params }: { params: { username: string } }) {
 	const id_cita = params.username.split("_")[1];
-	const [paciente, setPaciente] = useState<DatePacient[]>([])
+	const [paciente, setPaciente] = useState<DatePacient>()
 	useEffect(() => {
 		const fetchData = async () => {
 			const response = await fetch(`${process.env.NEXT_PUBLIC_API}/pacients/getDateById/${id_cita}`)
@@ -57,12 +57,12 @@ export default function Payment({ params }: { params: { username: string } }) {
 					</div>
 				</div>
 			</div>
-			<PaymentCard 
-				motivo= {paciente?.motivo}
-				costo_total= {paciente?.costo_total}
-				fecha_cita= {paciente?.fecha_cita}
-				abono= {paciente?.abono}
-				observaciones= {paciente?.observaciones}
+			<PaymentCard
+				motivo={paciente?.motivo ?? ''}
+				costo_total={paciente?.costo_total ?? 0}
+				fecha_cita={paciente?.fecha_cita ?? ''}
+				abono={paciente?.abono ?? 0}
+				observaciones={paciente?.observaciones ?? ''}
 			/>
 			<FormControl className='px-8 w-full' variant="standard">
 				<InputLabel className='mx-8' htmlFor="standard-adornment-password">Abonar</InputLabel>

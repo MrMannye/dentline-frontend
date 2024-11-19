@@ -1,13 +1,15 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { InputService, inputsService } from '../utils/InputsService'
 import { Fab, FormControl, Input, InputAdornment, TextField } from '@mui/material';
 
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { usePatient } from '../../patients/context/PatientContext';
 
 export default function TabService(props: { setSection: (section: string) => void }) {
 
 	const [services, setServices] = useState<InputService[]>(inputsService);
+	const { patient, setPatient } = usePatient();
 
 	const addNewService = () => {
 		const newService = {
@@ -42,12 +44,13 @@ export default function TabService(props: { setSection: (section: string) => voi
 
 	const handleSubmit = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
 		e.preventDefault()
+		let nuevoTratamiento = '';
+		services.forEach(service => {
+			nuevoTratamiento += `${service.name} - ${service.price}_`; // Acumula en la variable
+		})
+		setPatient({ ...patient, tratamiento: [nuevoTratamiento] })
 		props.setSection("Summary");
 	}
-
-	useEffect(() => {
-		console.log(services)
-	}, [services])
 
 	return (
 		<div className='flex flex-col w-full mt-5'>
