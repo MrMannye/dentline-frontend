@@ -1,7 +1,6 @@
 import React from 'react'
 
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import SearchIcon from '@mui/icons-material/Search';
 import AutorenewIcon from '@mui/icons-material/Autorenew';
 
 import { usePathname, useRouter, redirect } from 'next/navigation';
@@ -10,8 +9,8 @@ import { useWallet } from '../../auth/context/WalletContext';
 export default function Navigation() {
 
 	const routerPath = usePathname();
-	const {account} = useWallet()
-	if(!account && routerPath !== '/login') redirect('/login')
+	const { account } = useWallet()
+	if (!account && routerPath !== '/login') redirect('/login')
 
 	const router = useRouter();
 
