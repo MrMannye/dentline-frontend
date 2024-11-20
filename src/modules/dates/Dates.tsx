@@ -11,6 +11,7 @@ import "react-day-picker/style.css";
 import { TimeView } from '@mui/x-date-pickers';
 import { Dayjs } from 'dayjs';
 import { usePatient } from '../patients/context/PatientContext';
+import { se } from 'date-fns/locale';
 
 interface disabledHour {
 	disabledHours: number;
@@ -18,14 +19,13 @@ interface disabledHour {
 
 export default function Dates(props: { setSection: (section: string) => void }) {
 
-	const { patient, setPatient } = usePatient();
 	const [days, setDays] = React.useState<Date | undefined>();
 	const [valid, setValid] = useState(true);
 	const [validDate, setValidDate] = useState(true);
 	const [startTime, setStartTime] = useState<Dayjs | null>(null);
 	const [endTime, setEndTime] = useState<Dayjs | null>(null);
 	const [disabledHours, setDisabledHours] = useState<number[]>([]);
-	const [dateTime, setDateTime] = useState<string>();
+	const { patient, setPatient } = usePatient();
 
 	const shouldDisableTime = (value: Dayjs, view: TimeView): boolean => {
 		if (view === 'hours') {
@@ -40,9 +40,13 @@ export default function Dates(props: { setSection: (section: string) => void }) 
 		return `${year}-${month}-${day}`;
 	}
 
-	const handleSubmit = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+	const handleSaveDate = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
 		e.preventDefault()
-		setPatient({ ...patient, fecha: dateTime});
+		const startDate = days ? new Date(days.setHours(startTime?.hour() || 0, startTime?.minute() || 0)) : null;
+		const endDate = days ? new Date(days.setHours(endTime?.hour() || 0, endTime?.minute() || 0)) : null;
+		const formattedDate = days ? formatDateForMySQL(days) : null; // Formatea la fecha
+		setPatient({ ...patient, fecha_start_cita: startDate, fecha_end_cita: endDate, fecha_cita: formattedDate });
+		console.log(`${formattedDate} - ${startDate} - ${endDate}`);
 		props.setSection("Service");
 	}
 
@@ -68,27 +72,20 @@ export default function Dates(props: { setSection: (section: string) => void }) 
 	}, [days])
 
 	useEffect(() => {
-    if (days) {
-        setValidDate(false);
-    } else {
-        setValidDate(true);
-    }
-    if (startTime && endTime) {
-        if (startTime.isBefore(endTime)) {
-            setValid(false);
-
-            // Formatear los valores
-            const formattedDate = formatDateForMySQL(days || new Date());
-            const formattedStartTime = startTime.format('HH:mm');
-            const formattedEndTime = endTime.format('HH:mm');
-
-            // Imprimir en el formato deseado (año-mes-dia starTime endTime)
-						setDateTime(`${formattedDate} ${formattedStartTime} ${formattedEndTime}`);
-        } else {
-            setValid(true);
-        }
-    }
-}, [days, startTime, endTime]);
+		if (days) {
+			setValidDate(false)
+		} else {
+			setValidDate(true)
+		}
+		if (startTime && endTime) {
+			if (startTime.isBefore(endTime)) {
+				setValid(false)
+				console.log(days, startTime?.hour() + ':' + startTime?.minute(), endTime?.hour() + ':' + endTime?.minute())
+			} else {
+				setValid(true)
+			}
+		}
+	}, [days, startTime, endTime])
 
 	return (
 		<div className='flex flex-col w full'>
@@ -129,7 +126,7 @@ export default function Dates(props: { setSection: (section: string) => void }) 
 						/>
 					</LocalizationProvider>
 				</div>
-				<button onClick={(e) => handleSubmit(e)} disabled={valid} value={"CONTINUAR"} className="h-12 w-full mt-10 rounded-xl bg-primary-pressed text-white shadow-xl text-center disabled:border-0 disabled:bg-[#FFCD9F] disabled:text-white">
+				<button onClick={(e) => handleSaveDate(e)} disabled={valid} value={"CONTINUAR"} className="h-12 w-full mt-10 rounded-xl bg-primary-pressed text-white shadow-xl text-center disabled:border-0 disabled:bg-[#FFCD9F] disabled:text-white">
 					CONTINUAR
 				</button>
 			</div>

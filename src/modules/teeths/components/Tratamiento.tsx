@@ -22,7 +22,7 @@ export default function Tratamiento() {
 		(patient?.teeths || []).forEach((tooth) => {
 			const tratamiento = allValues[`tratamiento${tooth}`] || "N/A";
 			const precio = allValues[`precio${tooth}`] || "N/A";
-			const key = `${tratamiento} - ${precio}`;
+			const key = `${tratamiento.trim().toLowerCase()} - ${precio.trim()}`;
 
 			if (toothDataMap[key]) {
 				toothDataMap[key].push(tooth);

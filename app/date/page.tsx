@@ -21,7 +21,7 @@ export default function Index() {
 			</div>
 			{section === "Date" && <Dates setSection={setSection} />}
 			{section === "Service" && <TabService setSection={setSection} />}
-			{section === "Summary" && <TabSummary setSection={setSection} />}
+			{section === "Summary" && <TabSummary />}
 		</div>
 
 	)

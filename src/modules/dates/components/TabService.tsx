@@ -1,13 +1,16 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { InputService, inputsService } from '../utils/InputsService'
 import { Fab, FormControl, Input, InputAdornment, TextField } from '@mui/material';
 
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { usePatient } from '../../patients/context/PatientContext';
+import Tratamiento from '../../teeths/components/Tratamiento';
 
 export default function TabService(props: { setSection: (section: string) => void }) {
 
 	const [services, setServices] = useState<InputService[]>(inputsService);
+	const { patient, setPatient } = usePatient();
 
 	const addNewService = () => {
 		const newService = {
@@ -15,12 +18,19 @@ export default function TabService(props: { setSection: (section: string) => voi
 			name: "Tratamiento",
 			price: "",
 		}
+		inputsService.push(newService)
 		setServices([...services, newService])
 	}
-	const deleteService = (id: number) => {
-		const newServices = services.filter(service => service.id !== id)
-		setServices(newServices)
-	}
+	const deleteService = (name: string, id: number) => {
+		const newFilterServices = services.filter(service => service.id !== id)
+    setServices(newFilterServices)
+		const indexToDelete = inputsService.findIndex(input => input.name === name);
+
+		// Si el índice existe, elimina el objeto
+		if (indexToDelete !== -1) {
+			inputsService.splice(indexToDelete, 1);
+		}
+	};
 	const handleOnChangeName = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, id: number) => {
 		const newServices = services.map(service => {
 			if (service.id === id) {
@@ -40,17 +50,30 @@ export default function TabService(props: { setSection: (section: string) => voi
 		setServices(newServices)
 	}
 
-  const handleSubmit = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    e.preventDefault();
-    props.setSection('Summary');
-    console.log('Selected Services:', services);
-  };
-
-	useEffect(() => {
+	const handleSubmit = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+		e.preventDefault()
 		console.log(services)
-	}, [services])
+		// Crea un array con los tratamientos actuales en este formulario
+		const newServices = patient?.tratamiento?.filter(service => {
+			const nombreServicio = service.split('-')[0]?.trim();
+    	return nombreServicio !== "SG";
+		})
+		console.log(newServices)
 
-// 21,22 - Limpieza - 1300_Coronas - 1200_
+		const nuevoTratamiento = services.map(
+			service => `SG - ${service.name} - ${service.price}`
+		);
+		console.log(patient)
+		if (patient) {
+			setPatient({
+				...patient,
+				tratamiento: [...(newServices || []), ...nuevoTratamiento], // Une los nuevos tratamientos con los existentes
+			});
+		}
+		props.setSection("Summary");
+	}
+
+	console.log(patient);
 
 	return (
 		<div className='flex flex-col w-full mt-5'>
@@ -58,7 +81,7 @@ export default function TabService(props: { setSection: (section: string) => voi
 				{services.map((input) => {
 					return (
 						<div key={input.id} className={`p-3 flex items-center border relative justify-between border-gray-300 mx-5 mb-5 rounded-xl`}>
-							<Fab color="primary" size='small' style={{ position: 'absolute', top: -8, right: -7, zIndex: 10 }} onClick={() => deleteService(input.id)}>
+							<Fab color="primary" size='small' style={{ position: 'absolute', top: -8, right: -7, zIndex: 10 }} onClick={() => deleteService(input.name, input.id)}>
 								<DeleteIcon />
 							</Fab>
 							<FormControl size="small" fullWidth style={{ padding: 0, margin: 0 }}>
