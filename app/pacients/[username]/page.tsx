@@ -20,7 +20,8 @@ export default function Pacient({ params }: { params: { username: string } }) {
 			const response = await fetch(`${process.env.NEXT_PUBLIC_API}/pacients/${id_paciente}`);
 			const { data } = await response.json();
 			const pacientData = data[0];
-			setPatient({"id_paciente": id_paciente, ...pacientData});
+			console.log(id_paciente, pacientData);
+			setPatient({id_paciente: id_paciente, ...pacientData});
 			reset({ direccion: pacientData.direccion, profesion: pacientData.profesion, edad: pacientData.edad, estado_civil: pacientData.estado_civil });
 		}
 		fetchData();

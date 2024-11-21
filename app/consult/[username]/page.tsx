@@ -25,7 +25,6 @@ export default function Consult() {
 			const response = await fetch(`${process.env.NEXT_PUBLIC_API}/pacients/vitalSigns/${patient?.id_paciente}`);
 			const { data } = await response.json();
 			const pacientDataSV = data[0]; 
-			setPatient(data[0]);
 			if(pacientDataSV != undefined){
 				reset({ peso: pacientDataSV.peso, alergias: pacientDataSV.alergias, tipo_sangre: pacientDataSV.tipo_sangre, pulso: pacientDataSV.pulso, presion: pacientDataSV.presion, antecedentes_medicos: pacientDataSV.antecedentes_medicos });
 			}

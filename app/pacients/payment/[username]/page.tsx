@@ -23,6 +23,7 @@ interface DatePacient {
 export default function Payment({ params }: { params: { username: string } }) {
 	const id_cita = params.username.split("_")[1];
 	const [paciente, setPaciente] = useState<DatePacient>()
+
 	useEffect(() => {
 		const fetchData = async () => {
 			const response = await fetch(`${process.env.NEXT_PUBLIC_API}/pacients/getDateById/${id_cita}`)
@@ -33,7 +34,7 @@ export default function Payment({ params }: { params: { username: string } }) {
 	}, []);
 
 	const [open, setOpen] = useState(false);
-
+	console.log(paciente?.fecha_cita)
 	const handleClickOpen = () => {
 		setOpen(true);
 	};
