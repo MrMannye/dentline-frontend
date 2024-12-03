@@ -10,7 +10,7 @@ function CardPayment({ motivo, costo_total, fecha_cita, abono, observaciones }: 
 
   return (
     <div className='rounded-xl flex flex-col m-4 mt-8 border'>
-      <span className='bg-acent-color text-white text-center rounded-t-xl'>{fecha_cita}</span>
+      <span className='bg-acent-color text-white text-center rounded-t-xl'>{new Date(fecha_cita).toDateString()} {new Date(fecha_cita).toLocaleTimeString()}</span>
       <div className='text-xs mx-4 my-2 text-gray-400 flex flex-col'>
         <h2 className='uppercase font-bold text-gray-700 mb-1'>Procedimientos:</h2>
         {motivo?.split("_").map((procedimiento) => {

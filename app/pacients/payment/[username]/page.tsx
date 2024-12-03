@@ -29,12 +29,13 @@ export default function Payment({ params }: { params: { username: string } }) {
 			const response = await fetch(`${process.env.NEXT_PUBLIC_API}/pacients/getDateById/${id_cita}`)
 			const data = await response.json()
 			setPaciente(data.data[0])
+			console.log(data.data[0])
 		}
 		fetchData()
 	}, []);
 
 	const [open, setOpen] = useState(false);
-	console.log(paciente?.fecha_cita)
+	console.log(new Date(paciente?.fecha_cita || new Date() ))
 	const handleClickOpen = () => {
 		setOpen(true);
 	};
