@@ -20,11 +20,11 @@ export default function Login() {
 
 	if (!account?.length)
 		return (
-			<div className={'h-full flex flex-col items-center justify-center space-y-6'}>
+			<div className={'h-full flex flex-col items-center justify-center space-y-6 mx-8'}>
 				<div className='mb-4'>
 					<Image alt='Imagen Logo' width={340} height={66} src={"/img/logo_login.png"} />
 				</div>
-				<button className='input__button' onClick={connectWallet}>Connect to Metamask</button>
+				<button className='input__button w-full' onClick={connectWallet}>Connect to Metamask</button>
 			</div>
 		)
 }

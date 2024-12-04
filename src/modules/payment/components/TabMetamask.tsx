@@ -15,7 +15,7 @@ function TabMetamask() {
 			.catch(err => {
 				console.error(err)
 			})
-	}, [])
+	}, [account])
 
 	return (
 		<div className='flex flex-col items-center justify-center'>

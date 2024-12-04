@@ -8,6 +8,7 @@ import Avatar from '@mui/material/Avatar';
 import PaymentCard from '@/src/modules/payment/PaymentCard'
 import { Input, InputAdornment, IconButton, FormControl, InputLabel } from '@mui/material';
 import PaymentDialog from '@/src/modules/payment/PaymentDialog';
+import { useForm } from 'react-hook-form';
 
 interface DatePacient {
 	motivo: string,
@@ -23,6 +24,8 @@ interface DatePacient {
 export default function Payment({ params }: { params: { username: string } }) {
 	const id_cita = params.username.split("_")[1];
 	const [paciente, setPaciente] = useState<DatePacient>()
+	const { register, getValues, reset, setValue } = useForm();
+	const [open, setOpen] = useState(false);
 
 	useEffect(() => {
 		const fetchData = async () => {
@@ -32,11 +35,18 @@ export default function Payment({ params }: { params: { username: string } }) {
 			console.log(data.data[0])
 		}
 		fetchData()
-	}, []);
+		reset({ abono: 0 })
+	}, [id_cita, reset]);
 
-	const [open, setOpen] = useState(false);
-	console.log(new Date(paciente?.fecha_cita || new Date() ))
+	console.log(new Date(paciente?.fecha_cita || new Date()))
 	const handleClickOpen = () => {
+		setOpen(true);
+	};
+	const handleClickPagoTotal = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+		e.preventDefault()
+		if (paciente) {
+			setValue('abono', (paciente.costo_total ?? 0) - (paciente.abono ?? 0));
+		}
 		setOpen(true);
 	};
 
@@ -55,7 +65,7 @@ export default function Payment({ params }: { params: { username: string } }) {
 					</div>
 					<div className='flex items-center space-x-1'>
 						<EmailIcon />
-						<span>{paciente?.email}</span>
+						<span className='truncate w-44'>{paciente?.email}</span>
 					</div>
 				</div>
 			</div>
@@ -67,10 +77,11 @@ export default function Payment({ params }: { params: { username: string } }) {
 				observaciones={paciente?.observaciones ?? ''}
 			/>
 			<FormControl className='px-8 w-full' variant="standard">
-				<InputLabel className='mx-8' htmlFor="standard-adornment-password">Abonar</InputLabel>
+				<InputLabel shrink className='mx-8' htmlFor="standard-adornment-password">Abonar</InputLabel>
 				<Input
 					id="standard-adornment-password"
 					type={'number'}
+					{...register('abonado', { required: true })}
 					className='m-8'
 					endAdornment={
 						<InputAdornment position="end">
@@ -81,7 +92,12 @@ export default function Payment({ params }: { params: { username: string } }) {
 					}
 				/>
 			</FormControl>
-			<PaymentDialog open={open} setOpen={setOpen} />
+			<div className='px-8 w-full'>
+				<button className='input__button w-full' onClick={(e) => handleClickPagoTotal(e)}>
+					Pago Total
+				</button>
+			</div>
+			<PaymentDialog open={open} setOpen={setOpen} abonado={getValues().abonado} idCita={parseInt(id_cita)} {...paciente} />
 		</div>
 	)
 }

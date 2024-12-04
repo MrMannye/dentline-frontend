@@ -8,26 +8,120 @@ import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
+import Slide from '@mui/material/Slide';
+import { TransitionProps } from '@mui/material/transitions';
+import { Chip, Divider } from '@mui/material';
 
 import TabTarjeta from './components/TabTarjeta'
 import TabEfectivo from './components/TabEfectivo';
 import TabMetamask from './components/TabMetamask';
+import { useRouter } from 'next/navigation';
+import React from 'react';
+import { useWallet } from '../auth/context/WalletContext';
+import { crearCita } from '../contracts/contrato';
 
-interface Props {
-	open: boolean,
-	setOpen: (open: boolean) => void
+const PAGO_TOTAL = 'Se realizó el pago completo';
+const PAGO_PARCIAL = 'Se realizó el pago parcial';
+const ABONO_EXCEDIDO = 'El abono no puede exceder el costo total';
+
+interface CitaDental {
+	idPaciente: number;
+	nombrePaciente: string;
+	profesionPaciente: string;
+	edadPaciente: number;
+	tipoSangre: string;
+	alergias: string;
+	nombreDentista: string;
+	profesionDentista: string;
+	telefonoDentista: string;
+	fecha: Date;  // Asegúrate de que sea un número entero, probablemente el timestamp
+	motivo: string;
+	costoTotalWei: number;  // Esto parece ser un valor numérico (puede ser un monto en alguna moneda o unidad)
+	observaciones: string;
 }
 
-export default function CustomizedDialogs(params: Props) {
+
+const Transition = React.forwardRef(function Transition(
+	props: TransitionProps & {
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		children: React.ReactElement<any, any>;
+	},
+	ref: React.Ref<unknown>,
+) {
+	return <Slide direction="up" ref={ref} {...props} />;
+});
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export default function CustomizedDialogs(params: any) {
 
 	const [value, setValue] = useState(0);
+	const [message, setMessage] = useState('')
+	const [openAlert, setOpenAlert] = useState(false);
+	const router = useRouter();
+	const { dentist } = useWallet()
+	const [historial, setHistorial] = useState<CitaDental>()
 
 	const handleChange = (event: React.SyntheticEvent, tabIndex: number) => {
 		setValue(tabIndex);
 	};
+	const handleCloseAbono = () => {
+		setHistorial({
+			idPaciente: 1,
+			nombrePaciente: params.nombre,
+			profesionPaciente: "Estudiante",
+			edadPaciente: 20,
+			tipoSangre: "O+",
+			alergias: "Ninguna",
+			nombreDentista: dentist?.nombre || "",
+			profesionDentista: dentist?.especializacion || "",
+			telefonoDentista: dentist?.telefono || "",
+			fecha: params.fecha_cita,  // Asegúrate de que sea un número entero, probablemente el timestamp
+			motivo: params.motivo,
+			costoTotalWei: params.costo_total,  // Esto parece ser un valor numérico (puede ser un monto en alguna moneda o unidad)
+			observaciones: params.observaciones,
+		})
+		if (message === PAGO_TOTAL) {
+			crearCita(historial)
+			router.push('/dates')
+		}
+		if (message === PAGO_PARCIAL) params.setOpen(false)
+		if (message === ABONO_EXCEDIDO) params.setOpen(false)
+		setOpenAlert(false)
+	};
 	const handleClose = () => {
 		params.setOpen(false);
-	};
+	}
+	const handleAbono = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+		e.preventDefault()
+		setOpenAlert(true)
+		try {
+			const response = await fetch(`${process.env.NEXT_PUBLIC_API}/dates/updateAbono`, {
+				method: "PUT", // Método HTTP
+				headers: {
+					"Content-Type": "application/json", // Especifica que estás enviando JSON
+				},
+				body: JSON.stringify({
+					id_cita: params.idCita, // ID de la cita
+					abono: params.abonado, // Nuevo valor del abono
+				}),
+			});
+
+			if (!response.ok) {
+				throw new Error("Error al actualizar el abono");
+			}
+
+			const { data } = await response.json();
+			if (data.message.isAbonoEqualCosto) setMessage(PAGO_TOTAL);
+			else setMessage(PAGO_PARCIAL);
+		} catch (error) {
+			console.error("Error:", error);
+			if (error instanceof Error) {
+				setMessage(ABONO_EXCEDIDO);
+			} else {
+				alert("Ocurrió un error");
+			}
+		}
+	}
 
 	return (
 		<Dialog
@@ -60,16 +154,49 @@ export default function CustomizedDialogs(params: Props) {
 					{value === 0 && <TabTarjeta />}
 					{value === 1 && <TabMetamask />}
 					{value === 2 && <TabEfectivo />}
-					<span>Dentista: Miguel Aguilera</span>
+					<span>Dentista: {dentist?.nombre}</span>
 					<span>Paciente: Francisco Arturo</span>
-					<strong>Pago: $500 MXN</strong>
+					<strong>Pago: ${params.abono} MXN</strong>
 				</div>
 			</DialogContent>
 			<DialogActions className='p-4'>
-				<Button autoFocus onClick={handleClose}>
+				<Button autoFocus onClick={(e) => handleAbono(e)}>
 					Abonar
 				</Button>
 			</DialogActions>
+			<Dialog
+				open={openAlert}
+				fullScreen
+				TransitionComponent={Transition}
+				keepMounted
+				onClose={handleCloseAbono}
+				aria-describedby="alert-dialog-slide-description"
+			>
+				<DialogTitle className='!font-bold text-center bg-green-400'>{message}</DialogTitle>
+				<DialogContent className='mt-2'>
+					<div className='text-center'>
+						<p className=''>{message} de la cita {params.idCita}</p>
+						<p className=''> Se ha realizado el pago de ${params.abonado} MXN </p>
+					</div>
+
+					<Divider className='!my-4'>
+						<Chip label="Dentista" size="small" />
+					</Divider>
+					<p><strong>Dentista: </strong>{dentist?.nombre}</p>
+					<p><strong>Especilizacion: </strong>{dentist?.especializacion}</p>
+					<p><strong>Cuenta: </strong>{dentist?.cuenta_clabe}</p>
+					<Divider className='!my-4'>
+						<Chip label="Paciente" size="small" />
+					</Divider>
+					<p><strong>Paciente: </strong>{params?.nombre}</p>
+					<p><strong>Total: </strong>{params?.costo_total}</p>
+					<p><strong>Abono: </strong>{params?.abono}</p>
+					<p><strong>Abonado: </strong>{params?.abonado}</p>
+				</DialogContent>
+				<DialogActions>
+					<Button onClick={handleCloseAbono}>Continuar</Button>
+				</DialogActions>
+			</Dialog>
 		</Dialog>
 	);
 }

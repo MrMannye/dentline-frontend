@@ -13,7 +13,7 @@ body {
 	}
 
 	.input__button {
-		@apply cursor-pointer rounded-xl w-[378px] h-12 uppercase disabled:bg-[#FFCD9F] disabled:shadow-none bg-[#FF7A00] shadow-xl text-white text-base tracking-wider
+		@apply cursor-pointer rounded-xl h-12 uppercase disabled:bg-[#FFCD9F] disabled:shadow-none bg-[#FF7A00] shadow-xl text-white text-base tracking-wider
 	}
 
 	.link {

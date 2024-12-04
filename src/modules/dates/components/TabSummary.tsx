@@ -12,7 +12,7 @@ export default function TabSummary() {
 	const description = "Hacer cita ¿Estás seguro de que quieres agendar la cita?";
 	const { patient } = usePatient();
 	const [servicios] = useState(patient?.tratamiento || []);
-	const {dentist} = useWallet();
+	const { dentist } = useWallet();
 
 	const handleSubmit = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
 		e.preventDefault()

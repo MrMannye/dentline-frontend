@@ -5,7 +5,6 @@ import { Fab, FormControl, Input, InputAdornment, TextField } from '@mui/materia
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { usePatient } from '../../patients/context/PatientContext';
-import Tratamiento from '../../teeths/components/Tratamiento';
 
 export default function TabService(props: { setSection: (section: string) => void }) {
 
@@ -23,7 +22,7 @@ export default function TabService(props: { setSection: (section: string) => voi
 	}
 	const deleteService = (name: string, id: number) => {
 		const newFilterServices = services.filter(service => service.id !== id)
-    setServices(newFilterServices)
+		setServices(newFilterServices)
 		const indexToDelete = inputsService.findIndex(input => input.name === name);
 
 		// Si el índice existe, elimina el objeto
@@ -56,7 +55,7 @@ export default function TabService(props: { setSection: (section: string) => voi
 		// Crea un array con los tratamientos actuales en este formulario
 		const newServices = patient?.tratamiento?.filter(service => {
 			const nombreServicio = service.split('-')[0]?.trim();
-    	return nombreServicio !== "SG";
+			return nombreServicio !== "SG";
 		})
 		console.log(newServices)
 
