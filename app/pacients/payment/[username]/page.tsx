@@ -18,7 +18,12 @@ interface DatePacient {
 	observaciones: string,
 	nombre: string,
 	telefono: string,
-	email: string
+	email: string,
+	id_paciente: number,
+	profresion: string,
+	edad: number,
+	tipo_sangre: string,
+	alergias: string,
 }
 
 export default function Payment({ params }: { params: { username: string } }) {
@@ -45,7 +50,7 @@ export default function Payment({ params }: { params: { username: string } }) {
 	const handleClickPagoTotal = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
 		e.preventDefault()
 		if (paciente) {
-			setValue('abono', (paciente.costo_total ?? 0) - (paciente.abono ?? 0));
+			setValue('abonado', (paciente.costo_total ?? 0) - (paciente.abono ?? 0));
 		}
 		setOpen(true);
 	};

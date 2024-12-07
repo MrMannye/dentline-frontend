@@ -14,17 +14,18 @@ export default function Pacient({ params }: { params: { username: string } }) {
 	const [isChanged, setIsChanged] = useState(false);
 	const { register, getValues, reset } = useForm();
 	const id_paciente = params.username.split("_")[1];
-	const { patient, setPatient} = usePatient();
+	const { patient, setPatient } = usePatient();
 	useEffect(() => {
 		const fetchData = async () => {
 			const response = await fetch(`${process.env.NEXT_PUBLIC_API}/pacients/${id_paciente}`);
 			const { data } = await response.json();
 			const pacientData = data[0];
 			console.log(id_paciente, pacientData);
-			setPatient({id_paciente: id_paciente, ...pacientData});
+			setPatient({ id_paciente: id_paciente, ...pacientData });
 			reset({ direccion: pacientData.direccion, profesion: pacientData.profesion, edad: pacientData.edad, estado_civil: pacientData.estado_civil });
 		}
 		fetchData();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	const handleSaveData = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -72,7 +73,7 @@ export default function Pacient({ params }: { params: { username: string } }) {
 			<div className='flex items-center justify-around w-full bg-secundary-color text-white p-2'>
 				<h3 className='text-center'>PERFIL</h3>
 				<h3 className='text-center'>DATOS</h3>
-				<Link className='' href={`/pacients/historial/${patient?.nombre_paciente}`}>
+				<Link className='' href={`/pacients/historial/${patient?.nombre_paciente}_${id_paciente}`}>
 					<h3 className='text-center'>HISTORIAL</h3>
 				</Link>
 			</div>

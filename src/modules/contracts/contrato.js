@@ -1,7 +1,8 @@
 import Web3 from "web3";
-import abi from "../../../build/contracts/ClinicaDental.json"; // Ruta al ABI del contrato
+import contractData from "../../../build/contracts/ClinicaDental.json"; // Ruta al ABI del contrato
 
-const CONTRACT_ADDRESS = "0x95337FF74CD44c2664049B915e9d6d3B2390c507"; // Dirección del contrato
+const CONTRACT_ADDRESS = "0xe2633c7e49dCefB842D0aCc087b11CDc21a0fc60"; // Dirección del contrato
+const abi = contractData.abi; // ABI del contrato
 
 // Instancia de Web3
 const getWeb3 = () => {
@@ -14,8 +15,9 @@ const getWeb3 = () => {
 
 // Función para crear una cita
 export const crearCita = async (datosCita) => {
+	console.log("Creando cita:", datosCita);
 	const { idPaciente, nombrePaciente, profesionPaciente, edadPaciente, tipoSangre, alergias,
-		nombreDentista, profesionDentista, telefonoDentista, fecha, motivo, costoTotal, observaciones } = datosCita;
+		nombreDentista, telefonoDentista, fecha, motivo, costoTotal, observaciones } = datosCita;
 
 	try {
 		const web3 = getWeb3();
@@ -30,19 +32,18 @@ export const crearCita = async (datosCita) => {
 		// Convertir el costo total a Wei (Ethereum usa Wei como su unidad base)
 		const costoTotalWei = web3.utils.toWei(costoTotal.toString(), "ether");
 
-		// Crear la cita llamando al contrato
+		// Llamada a la función 'agregarCita' con el idPaciente
 		const tx = await contrato.methods
-			.crearCita(
-				idPaciente,
+			.agregarCita(
+				idPaciente,           // El ID del paciente
 				nombrePaciente,
 				profesionPaciente,
 				edadPaciente,
 				tipoSangre,
-				alergias,
+				alergias, // Asegúrate de que 'alergias' sea un arreglo
 				nombreDentista,
-				profesionDentista,
 				telefonoDentista,
-				fecha, // Asegúrate de que el timestamp sea un número entero
+				new Date(fecha).getTime() / 1000, // Convierte la fecha a timestamp
 				motivo,
 				costoTotalWei,
 				observaciones
@@ -63,8 +64,15 @@ export const obtenerCitasPorPaciente = async (idPaciente) => {
 		const web3 = getWeb3();
 		const contrato = new web3.eth.Contract(abi, CONTRACT_ADDRESS);
 
-		// Llamar a la función del contrato para obtener las citas
-		const citas = await contrato.methods.obtenerCitasPorPaciente(idPaciente).call();
+		// Obtener la cuenta conectada
+		const accounts = await web3.eth.getAccounts();
+		if (accounts.length === 0) {
+			throw new Error("No hay cuentas conectadas. Por favor, inicia sesión con MetaMask.");
+		}
+		// Llamar a la función 'getCitasDePaciente' para obtener las citas filtradas por dentista
+		console.log(accounts[0]);
+		const citas = await contrato.methods.getCitasDePaciente(idPaciente).call({ from: accounts[0] });
+
 
 		// Formatear las citas para facilitar el uso en el frontend
 		const citasFormateadas = citas.map((cita) => ({
@@ -75,7 +83,6 @@ export const obtenerCitasPorPaciente = async (idPaciente) => {
 			tipoSangre: cita.tipoSangre,
 			alergias: cita.alergias,
 			nombreDentista: cita.nombreDentista,
-			profesionDentista: cita.profesionDentista,
 			telefonoDentista: cita.telefonoDentista,
 			fecha: new Date(cita.fecha * 1000).toLocaleString(), // Convertir timestamp a fecha legible
 			motivo: cita.motivo,

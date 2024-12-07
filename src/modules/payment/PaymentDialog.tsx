@@ -24,22 +24,6 @@ const PAGO_TOTAL = 'Se realizó el pago completo';
 const PAGO_PARCIAL = 'Se realizó el pago parcial';
 const ABONO_EXCEDIDO = 'El abono no puede exceder el costo total';
 
-interface CitaDental {
-	idPaciente: number;
-	nombrePaciente: string;
-	profesionPaciente: string;
-	edadPaciente: number;
-	tipoSangre: string;
-	alergias: string;
-	nombreDentista: string;
-	profesionDentista: string;
-	telefonoDentista: string;
-	fecha: Date;  // Asegúrate de que sea un número entero, probablemente el timestamp
-	motivo: string;
-	costoTotalWei: number;  // Esto parece ser un valor numérico (puede ser un monto en alguna moneda o unidad)
-	observaciones: string;
-}
-
 
 const Transition = React.forwardRef(function Transition(
 	props: TransitionProps & {
@@ -59,32 +43,33 @@ export default function CustomizedDialogs(params: any) {
 	const [openAlert, setOpenAlert] = useState(false);
 	const router = useRouter();
 	const { dentist } = useWallet()
-	const [historial, setHistorial] = useState<CitaDental>()
 
 	const handleChange = (event: React.SyntheticEvent, tabIndex: number) => {
 		setValue(tabIndex);
 	};
 	const handleCloseAbono = () => {
-		setHistorial({
-			idPaciente: 1,
+		const historial = {
+			idPaciente: params.id_paciente,
 			nombrePaciente: params.nombre,
-			profesionPaciente: "Estudiante",
-			edadPaciente: 20,
-			tipoSangre: "O+",
-			alergias: "Ninguna",
+			profesionPaciente: params.profesion,
+			edadPaciente: params.edad,
+			tipoSangre: params.tipo_sangre,
+			alergias: params.alergias,
 			nombreDentista: dentist?.nombre || "",
-			profesionDentista: dentist?.especializacion || "",
 			telefonoDentista: dentist?.telefono || "",
 			fecha: params.fecha_cita,  // Asegúrate de que sea un número entero, probablemente el timestamp
 			motivo: params.motivo,
-			costoTotalWei: params.costo_total,  // Esto parece ser un valor numérico (puede ser un monto en alguna moneda o unidad)
+			costoTotal: params.costo_total,  // Esto parece ser un valor numérico (puede ser un monto en alguna moneda o unidad)
 			observaciones: params.observaciones,
-		})
+		}
 		if (message === PAGO_TOTAL) {
 			crearCita(historial)
 			router.push('/dates')
 		}
-		if (message === PAGO_PARCIAL) params.setOpen(false)
+		if (message === PAGO_PARCIAL) {
+			crearCita(historial)
+			params.setOpen(false)
+		}
 		if (message === ABONO_EXCEDIDO) params.setOpen(false)
 		setOpenAlert(false)
 	};
@@ -156,7 +141,7 @@ export default function CustomizedDialogs(params: any) {
 					{value === 2 && <TabEfectivo />}
 					<span>Dentista: {dentist?.nombre}</span>
 					<span>Paciente: Francisco Arturo</span>
-					<strong>Pago: ${params.abono} MXN</strong>
+					<strong>Pago: ${params.abonado} MXN</strong>
 				</div>
 			</DialogContent>
 			<DialogActions className='p-4'>

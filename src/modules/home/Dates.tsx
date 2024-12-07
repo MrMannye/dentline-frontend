@@ -8,6 +8,7 @@ interface Pacient {
 	nombre_paciente: string;
 	profesion: string;
 	fecha_cita: string;
+	id_cita: number;
 }
 
 export default function Dates() {
@@ -19,6 +20,7 @@ export default function Dates() {
 			console.log(process.env.NEXT_PUBLIC_API, dentist?.id_dentista)
 			const response = await fetch(`${process.env.NEXT_PUBLIC_API}/dentist/nextDate/${dentist?.id_dentista}`)
 			const { data } = await response.json()
+			console.log(data)
 			setPacients(data)
 		}
 		fetchData()
@@ -34,7 +36,7 @@ export default function Dates() {
 		<div className='w-full'>
 			{pacients.map(pacient => {
 				return (
-					<CardDate key={pacient.nombre_paciente} name={pacient.nombre_paciente} ocupation={pacient.profesion} date={getHourFromDate(pacient.fecha_cita)} id={pacient.nombre_paciente} />
+					<CardDate key={pacient.id_cita} nombre_paciente={pacient.nombre_paciente} ocupation={pacient.profesion} date={getHourFromDate(pacient.fecha_cita)} id_cita={pacient.id_cita} />
 				)
 			})}
 		</div>

@@ -1,10 +1,26 @@
+'use client';
+
 import { Avatar } from '@mui/material'
 import Link from 'next/link';
-import React from 'react'
+import React, { useEffect } from 'react'
+
+import { obtenerCitasPorPaciente } from '../../../../src/modules/contracts/contrato';
 
 import DeleteIcon from '@mui/icons-material/Delete';
 
-export default function Historia({ params }: { params: { username: string } }) {
+export default function Historial({ params }: { params: { username: string } }) {
+	// const [historial, setHistorial] = useState([])
+	const idPaciente = params.username.split("_")[1];
+
+	useEffect(() => {
+		console.log(parseInt(idPaciente))
+		const fetchData = async () => {
+			const response = await obtenerCitasPorPaciente(parseInt(idPaciente))
+			console.log(response)
+		}
+		fetchData()
+	}, [idPaciente]);
+
 
 	return (
 		<div className='w-full flex-1'>
