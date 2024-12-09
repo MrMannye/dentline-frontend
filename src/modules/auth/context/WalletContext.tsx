@@ -10,6 +10,7 @@ interface WalletContextType {
 	web3: Web3 | null;
 	connectWallet: () => Promise<void>;
 	dentist: DentistProps | null;
+	setDentist: React.Dispatch<React.SetStateAction<DentistProps | null>>;
 }
 
 interface DentistProps {
@@ -61,7 +62,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 	};
 
 	return (
-		<WalletContext.Provider value={{ account, web3, connectWallet, dentist }}>
+		<WalletContext.Provider value={{ account, web3, connectWallet, dentist, setDentist }}>
 			{children}
 		</WalletContext.Provider>
 	);

@@ -15,7 +15,6 @@ export default function Home() {
 			<div className='p-2 mt-7'>
 				<div className='flex justify-between font-bold items-center text-[#565656]'>
 					<h1 className='text-xl'>Pacientes</h1>
-					<AddIcon className='w-7 h-7 mr-7 text-[#565656]'></AddIcon>
 				</div>
 
 				<div className='flex justify-around items-center h-[72px] rounded-xl bg-primary-color mt-2'>

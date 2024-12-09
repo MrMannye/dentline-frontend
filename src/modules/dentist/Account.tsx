@@ -11,7 +11,7 @@ import { useWallet } from '@/src/modules/auth/context/WalletContext';
 
 function Account() {
 
-	const { account, dentist } = useWallet()
+	const { account, dentist, setDentist} = useWallet()
 	const { register, getValues, reset, formState: { isValid } } = useForm();
 
 	const [saveData, setSaveData] = useState(true);
@@ -62,6 +62,16 @@ function Account() {
 		}).then(response => response.json())
 			.then(data => {
 				console.log(data)
+				setDentist({ 
+					id_dentista: dentist?.id_dentista || "",
+					nombre: nombre,
+					especializacion: 'Dentista',
+					email: correo,
+					telefono: telefono,
+					cuenta_clabe: clabe,
+					numero_tarjeta: tarjeta,
+					wallet_address: account || ""
+					})
 			})
 			.catch(error => console.log(error))
 	}
