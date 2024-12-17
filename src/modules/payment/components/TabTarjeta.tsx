@@ -2,6 +2,8 @@ import React, { useEffect } from 'react'
 import QRCode from 'qrcode'
 import Image from 'next/image'
 
+import { createCoDiQR } from '../utils/generateCoDi'
+
 function TabTarjeta() {
 
 	const [qrCode, setQrCode] = React.useState<string>('')
