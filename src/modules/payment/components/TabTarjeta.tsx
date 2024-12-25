@@ -26,7 +26,7 @@ function TabTarjeta(params: any) {
 			console.log('QR Code generado:', qrCode)
 			setQrCode(qrCode as string)
 		})
-	}, [])
+	}, [dentist, params.abonado])
 
 	return (
 		<div className='flex flex-col items-center justify-center'>

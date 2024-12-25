@@ -1,7 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 'use client'
 import Dates from '../src/modules/home/Dates';
-import AddIcon from '@mui/icons-material/Add';
 import Avatar from '../src/utils/Avatar'
 
 export default function Home() {

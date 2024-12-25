@@ -11,7 +11,6 @@ import "react-day-picker/style.css";
 import { TimeView } from '@mui/x-date-pickers';
 import { Dayjs } from 'dayjs';
 import { usePatient } from '../patients/context/PatientContext';
-import { se } from 'date-fns/locale';
 
 // import the locale object
 import { es } from "react-day-picker/locale";
@@ -72,7 +71,7 @@ export default function Dates(props: { setSection: (section: string) => void }) 
 			console.log(disabledHours)
 		}
 		getDisabledHours();
-	}, [days])
+	}, [disabledHours, days])
 
 	useEffect(() => {
 		if (days) {

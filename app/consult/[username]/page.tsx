@@ -13,24 +13,24 @@ import { usePatient } from '@/src/modules/patients/context/PatientContext'
 export default function Consult() {
 
 	const router = useRouter();
-	const { register, getValues, reset ,formState: { errors, isValid }, handleSubmit } = useForm();
+	const { register, getValues, reset, formState: { errors, isValid }, handleSubmit } = useForm();
 	const description = "Guardar ¿Estás seguro de que quieres guardar la información?";
 	const [saveData, setSaveData] = useState(true);
 	const [dentalDisable, setDentalDisable] = useState(true);
-	const [openModal, setOpenModal] = useState(false);  
-	const { patient, setPatient} = usePatient();
-	
+	const [openModal, setOpenModal] = useState(false);
+	const { patient } = usePatient();
+
 	useEffect(() => {
 		const fetchData = async () => {
 			const response = await fetch(`${process.env.NEXT_PUBLIC_API}/pacients/vitalSigns/${patient?.id_paciente}`);
 			const { data } = await response.json();
-			const pacientDataSV = data[0]; 
-			if(pacientDataSV != undefined){
+			const pacientDataSV = data[0];
+			if (pacientDataSV != undefined) {
 				reset({ peso: pacientDataSV.peso, alergias: pacientDataSV.alergias, tipo_sangre: pacientDataSV.tipo_sangre, pulso: pacientDataSV.pulso, presion: pacientDataSV.presion, antecedentes_medicos: pacientDataSV.antecedentes_medicos });
 			}
 		}
 		fetchData();
-	},[]);
+	}, [patient, reset]);
 
 	console.log(patient);
 
