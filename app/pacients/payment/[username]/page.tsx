@@ -1,5 +1,4 @@
 'use client'
-export const runtime = 'edge';
 
 import { useState, useEffect } from 'react';
 import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
