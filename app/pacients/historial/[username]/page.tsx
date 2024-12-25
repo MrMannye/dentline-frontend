@@ -1,4 +1,5 @@
 'use client';
+export const runtime = 'edge';
 
 import { Avatar } from '@mui/material'
 import Link from 'next/link';

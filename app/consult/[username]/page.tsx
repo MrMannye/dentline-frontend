@@ -1,4 +1,5 @@
 'use client'
+export const runtime = 'edge';
 
 import { useState, useEffect } from 'react'
 import { Avatar, FormControl, IconButton, Input, InputAdornment, InputLabel } from '@mui/material'
