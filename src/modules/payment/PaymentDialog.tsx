@@ -131,13 +131,13 @@ export default function CustomizedDialogs(params: any) {
 					onChange={handleChange}
 					aria-label="secondary tabs example"
 				>
+					<Tab label="Efectivo" />
 					<Tab label="Tarjeta" />
 					<Tab label="Metamask" />
-					<Tab label="Efectivo" />
 				</Tabs>
 				<div className='p-2 flex flex-col items-center'>
 					{value === 0 && <TabEfectivo />}
-					{value === 1 && <TabTarjeta />}
+					{value === 1 && <TabTarjeta abonado={params.abonado} />}
 					{value === 2 && <TabMetamask />}
 					<span>Dentista: {dentist?.nombre}</span>
 					<span>Paciente: Francisco Arturo</span>
