@@ -51,16 +51,16 @@ export default function CustomizedDialogs(params: any) {
 		const historial = {
 			idPaciente: params.id_paciente,
 			nombrePaciente: params.nombre,
-			profesionPaciente: params.profesion,
-			edadPaciente: params.edad,
-			tipoSangre: params.tipo_sangre,
-			alergias: params.alergias,
+			profesionPaciente: params.profesion || "",
+			edadPaciente: params.edad || "",
+			tipoSangre: params.tipo_sangre || "",
+			alergias: params.alergias || "",
 			nombreDentista: dentist?.nombre || "",
 			telefonoDentista: dentist?.telefono || "",
 			fecha: params.fecha_cita,  // Asegúrate de que sea un número entero, probablemente el timestamp
 			motivo: params.motivo,
 			costoTotal: params.costo_total,  // Esto parece ser un valor numérico (puede ser un monto en alguna moneda o unidad)
-			observaciones: params.observaciones,
+			observaciones: params.observaciones || "",
 		}
 		if (message === PAGO_TOTAL) {
 			crearCita(historial)
