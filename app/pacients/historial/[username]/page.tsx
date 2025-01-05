@@ -5,10 +5,10 @@ import Link from 'next/link';
 import React, { useEffect } from 'react'
 
 import { obtenerCitasPorPaciente } from '../../../../src/modules/contracts/contrato';
-
 import DeleteIcon from '@mui/icons-material/Delete';
+import { DataPacient } from '@/src/utils/types';
 
-export default function Historial({ params }: { params: { username: string } }) {
+export default function Historial(params: DataPacient) {
 	// const [historial, setHistorial] = useState([])
 	const idPaciente = params.username.split("_")[1];
 

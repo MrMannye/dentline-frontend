@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation';
 import { Avatar } from '@mui/material'
 import ConsultDialog from '../../../utils/ConsultDialog';
 import { usePatient } from '../../patients/context/PatientContext';
@@ -13,6 +14,7 @@ export default function TabSummary() {
 	const { patient } = usePatient();
 	const [servicios] = useState(patient?.tratamiento || []);
 	const { dentist } = useWallet();
+	const router = useRouter();
 
 	const handleSubmit = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
 		e.preventDefault()
@@ -34,6 +36,7 @@ export default function TabSummary() {
 		}).then(response => response.json())
 			.then(data => {
 				console.log(data)
+				router.push('/dates')
 			})
 			.catch(error => console.log(error))
 

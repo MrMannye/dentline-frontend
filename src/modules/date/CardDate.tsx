@@ -62,19 +62,21 @@ export default function CardDate() {
 			</div>
 			{filteredPacientes.map((date) => {
 				return (
-					<Link href={`pacients/payment/${date.nombre_paciente}_${date.id_cita}`} className='rounded-xl flex flex-col' key={date.id_cita}>
-						<span className='bg-acent-color text-white text-center rounded-t-xl tracking-wide'>{date.nombre_paciente}</span>
-						<div className='text-xs mx-4 my-2 flex flex-col space-y-[3px]'>
-							<h3 className='font-bold text-gray-700'>Costo: <span className='font-normal text-gray-400'>${date.costo_total}</span></h3>
-							<h3 className='font-bold text-gray-700'>Fecha: <span className='font-normal text-gray-400'>{date.fecha_cita.split("T", 1)}</span></h3>
-							<h3 className='font-bold text-gray-700'>Hora: <span className='font-normal text-gray-400'>{date.hora_cita.split("", 5)}</span></h3>
-							<h3 className='font-bold text-gray-700'>Observaciones: <span className='font-normal text-gray-400'>{date.observaciones}</span></h3>
-						</div>
+					<div className='rounded-xl flex flex-col' key={date.id_cita}>
+						<Link href={`pacients/payment/${date.nombre_paciente}_${date.id_cita}`} className='w-full flex flex-col'>
+							<span className='bg-acent-color text-white text-center rounded-t-xl tracking-wide'>{date.nombre_paciente}</span>
+							<div className='text-xs mx-4 my-2 flex flex-col space-y-[3px]'>
+								<h3 className='font-bold text-gray-700'>Costo: <span className='font-normal text-gray-400'>${date.costo_total}</span></h3>
+								<h3 className='font-bold text-gray-700'>Fecha: <span className='font-normal text-gray-400'>{date.fecha_cita.split("T", 1)}</span></h3>
+								<h3 className='font-bold text-gray-700'>Hora: <span className='font-normal text-gray-400'>{date.hora_cita.split("", 5)}</span></h3>
+								<h3 className='font-bold text-gray-700'>Observaciones: <span className='font-normal text-gray-400'>{date.observaciones}</span></h3>
+							</div>
+						</Link>
 						<div className='bg-primary-200 w-full flex items-center justify-around rounded-b-xl p-1'>
-							<CalendarMonthIcon className='text-primary-color mx-3 text-base' onClick={() => router.push("/date")} />
+							<CalendarMonthIcon className='text-primary-color mx-3 text-base' onClick={() => router.push('/reschedule?id_cita=' + date.id_cita)} />
 							<DeleteIcon className='text-primary-color mx-3 text-base' />
 						</div>
-					</Link>
+					</div>
 				)
 			})}
 		</>
