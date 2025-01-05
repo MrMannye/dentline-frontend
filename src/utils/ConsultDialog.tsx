@@ -7,12 +7,9 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import { useRouter } from 'next/navigation';
 
 export default function ConsultDialog(props: { description: string, title: string, setDentalDisable: (dental: boolean) => void, setSaveData: (save: boolean) => void }) {
 	const [open, setOpen] = React.useState(true);
-	const router = useRouter();
-
 	const handleClose = () => {
 		props.setDentalDisable(false);
 		props.setSaveData(true);
@@ -22,7 +19,6 @@ export default function ConsultDialog(props: { description: string, title: strin
 	const handleAccept = () => {
 		props.setDentalDisable(false);
 		props.setSaveData(true);
-		router.push("/date");
 		setOpen(false);
 	};
 

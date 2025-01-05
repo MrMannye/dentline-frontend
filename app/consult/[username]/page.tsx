@@ -36,8 +36,8 @@ export default function Consult() {
 
 	const handleSaveData = (e: React.MouseEvent<HTMLInputElement>) => {
 		e.preventDefault();
-		const { peso, alergias, sangre, pulso, presion, antecedentes_medicos } = getValues();
-		console.log(peso, pulso, antecedentes_medicos, presion, alergias, sangre)
+		const { peso, alergias, tipo_sangre, pulso, presion, antecedentes_medicos } = getValues();
+		console.log(peso, pulso, antecedentes_medicos, presion, alergias, tipo_sangre)
 		setOpenModal(true);
 		console.log(patient)
 		fetch(`${process.env.NEXT_PUBLIC_API}/pacients/updateVitalSigns`, {
@@ -46,7 +46,7 @@ export default function Consult() {
 				'Content-Type': 'application/json'
 			},
 			body: JSON.stringify({
-				tipo_sangre: sangre,
+				tipo_sangre: tipo_sangre,
 				antecedentes_medicos: antecedentes_medicos,
 				peso: peso,
 				pulso: pulso,

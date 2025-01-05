@@ -5,6 +5,7 @@ import React, { useState } from 'react'
 import ConsultDialog from '../../../utils/ConsultDialog';
 import { usePatient } from '../../patients/context/PatientContext';
 import { useForm } from 'react-hook-form';
+import { useRouter } from 'next/navigation';
 
 export default function Tratamiento() {
 	const { patient, setPatient } = usePatient();
@@ -13,6 +14,7 @@ export default function Tratamiento() {
 	const [saveData, setSaveData] = useState(true);
 	const description = "Hacer cita ¿Estás seguro de que quieres agendar la cita?";
 	const { register, getValues } = useForm();
+	const router = useRouter();
 
 	const saveDataConsult = () => {
 		const allValues = getValues();
@@ -37,7 +39,7 @@ export default function Tratamiento() {
 		});
 
 		setPatient({ ...patient, tratamiento: formattedResults, observaciones: allValues.observaciones });
-		setOpenModal(!openModal);
+		router.push(`/date`);
 	}
 
 

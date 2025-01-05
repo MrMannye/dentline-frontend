@@ -78,7 +78,7 @@ export default function Pacients() {
 			},
 			body: JSON.stringify(newPaciente),
 		});
-
+		console.log(response);
 		if (response.ok) {
 			await fetchData();
 			setIsModalOpen(false); // Cerrar el modal
