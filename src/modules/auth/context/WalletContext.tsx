@@ -43,7 +43,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 				// WalletConnect para navegadores externos
 				provider = new WalletConnectProvider({
 					rpc: {
-						1: "https://cloudflare-eth.com", // Cambia por tu RPC
+						1: "https://mainnet.infura.io/v3/fc9b9d2f7c2d4f6f95cb900adb86b5dc", // Cambia por tu RPC
 					},
 					qrcodeModalOptions: {
 						mobileLinks: ["metamask"], // Prioriza abrir MetaMask si está instalada
