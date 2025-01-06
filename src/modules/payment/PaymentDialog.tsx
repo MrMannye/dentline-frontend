@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
@@ -67,7 +67,6 @@ export default function CustomizedDialogs(params: any) {
 			router.push('/dates')
 		}
 		if (message === PAGO_PARCIAL) {
-			crearCita(historial)
 			params.setOpen(false)
 		}
 		if (message === ABONO_EXCEDIDO) params.setOpen(false)
@@ -107,6 +106,9 @@ export default function CustomizedDialogs(params: any) {
 			}
 		}
 	}
+	useEffect(() => {
+		console.log(params)
+	}, [params])
 
 	return (
 		<Dialog
