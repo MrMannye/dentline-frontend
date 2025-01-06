@@ -50,6 +50,10 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 					},
 				});
 				await provider.enable();
+				// Redirigir manualmente al navegador después de login
+				if (typeof window !== "undefined") {
+					window.location.href = window.location.origin; // Vuelve a la página principal
+				}
 			}
 
 			const web3Instance = new Web3(provider);
