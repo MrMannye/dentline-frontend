@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-'use client'
+'use client';
 
 import React, { createContext, useState, useContext } from 'react';
 import { redirect } from 'next/navigation';
 import Web3 from 'web3';
-import WalletConnectProvider from "@walletconnect/web3-provider";
+import Web3Modal from 'web3modal';
+import WalletConnectProvider from '@walletconnect/web3-provider';
 
 interface WalletContextType {
 	account: string | null;
@@ -33,29 +34,32 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 	const [web3, setWeb3] = useState<Web3 | null>(null);
 
 	const connectWallet = async () => {
-		let provider: any;
 		try {
-			if ((window as any).ethereum && (window as any).ethereum.isMetaMask) {
-				// MetaMask extension o App en dApp browser
-				provider = (window as any).ethereum;
-				await provider.request({ method: 'eth_requestAccounts' });
-			} else {
-				// WalletConnect para navegadores externos
-				provider = new WalletConnectProvider({
-					rpc: {
-						1: "https://mainnet.infura.io/v3/fc9b9d2f7c2d4f6f95cb900adb86b5dc", // Cambia por tu RPC
+			// Opciones de conexión para Web3Modal
+			const providerOptions = {
+				walletconnect: {
+					package: WalletConnectProvider,
+					options: {
+						rpc: {
+							1: "https://mainnet.infura.io/v3/fc9b9d2f7c2d4f6f95cb900adb86b5dc", // Cambia por tu RPC personalizado
+						},
+						qrcodeModalOptions: {
+							mobileLinks: ["metamask"], // Prioriza MetaMask en móvil
+						},
 					},
-					qrcodeModalOptions: {
-						mobileLinks: ["metamask"], // Prioriza abrir MetaMask si está instalada
-					},
-				});
-				await provider.enable();
-				// Redirigir manualmente al navegador después de login
-				if (typeof window !== "undefined") {
-					window.location.href = window.location.origin; // Vuelve a la página principal
-				}
-			}
+				},
+			};
 
+			const web3Modal = new Web3Modal({
+				cacheProvider: true, // Habilita reconexión automática
+				providerOptions,
+				theme: "dark",
+			});
+
+			// Abre el modal de selección de wallet
+			const provider = await web3Modal.connect();
+
+			// Crear instancia de Web3 con el proveedor seleccionado
 			const web3Instance = new Web3(provider);
 			setWeb3(web3Instance);
 
@@ -79,6 +83,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 				wallet_address: user.wallet_address,
 			});
 
+			// Redirige a la página principal después de conectar
 			redirect('/');
 		} catch (error) {
 			console.error("Error connecting to wallet:", error);
