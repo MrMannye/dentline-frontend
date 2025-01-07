@@ -1,9 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-'use client'
+'use client';
 
 import React, { createContext, useState, useContext } from 'react';
-import { redirect } from 'next/navigation'
+import { redirect } from 'next/navigation';
 import Web3 from 'web3';
+import Web3Modal from 'web3modal';
+import WalletConnectProvider from '@walletconnect/web3-provider';
 
 interface WalletContextType {
 	account: string | null;
@@ -32,32 +34,59 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 	const [web3, setWeb3] = useState<Web3 | null>(null);
 
 	const connectWallet = async () => {
-		if ((window as any).ethereum) {
-			try {
-				const accounts = await (window as any).ethereum.request({ method: 'eth_requestAccounts' });
-				setAccount(accounts[0]);
-				const web3Instance = new Web3((window as any).ethereum);
-				setWeb3(web3Instance);
-				const response = await fetch(`${process.env.NEXT_PUBLIC_API}/dentist/validDentist/${accounts[0]}`)
-				const { data } = await response.json()
-				const user: DentistProps = data[0];
-				console.log(user)
-				setDentist({
-					id_dentista: user.id_dentista,
-					nombre: user.nombre,
-					especializacion: user.especializacion,
-					telefono: user.telefono,
-					email: user.email,
-					numero_tarjeta: user.numero_tarjeta,
-					cuenta_clabe: user.cuenta_clabe,
-					wallet_address: user.wallet_address
-				});
-				redirect('/')
-			} catch (error) {
-				console.error("Error connecting to wallet:", error);
-			}
-		} else {
-			console.log("Please install MetaMask!");
+		try {
+			// Opciones de conexión para Web3Modal
+			const providerOptions = {
+				walletconnect: {
+					package: WalletConnectProvider,
+					options: {
+						rpc: {
+							1: "https://mainnet.infura.io/v3/fc9b9d2f7c2d4f6f95cb900adb86b5dc", // Cambia por tu RPC personalizado
+						},
+						qrcodeModalOptions: {
+							mobileLinks: ["metamask"], // Prioriza MetaMask en móvil
+						},
+					},
+				},
+			};
+
+			const web3Modal = new Web3Modal({
+				cacheProvider: true, // Habilita reconexión automática
+				providerOptions,
+				theme: "dark",
+			});
+
+			// Abre el modal de selección de wallet
+			const provider = await web3Modal.connect();
+
+			// Crear instancia de Web3 con el proveedor seleccionado
+			const web3Instance = new Web3(provider);
+			setWeb3(web3Instance);
+
+			const accounts = await web3Instance.eth.getAccounts();
+			setAccount(accounts[0]);
+
+			// Validar cuenta en la API
+			const response = await fetch(`${process.env.NEXT_PUBLIC_API}/dentist/validDentist/${accounts[0]}`);
+			const { data } = await response.json();
+			const user: DentistProps = data[0];
+			console.log(user);
+
+			setDentist({
+				id_dentista: user.id_dentista,
+				nombre: user.nombre,
+				especializacion: user.especializacion,
+				telefono: user.telefono,
+				email: user.email,
+				numero_tarjeta: user.numero_tarjeta,
+				cuenta_clabe: user.cuenta_clabe,
+				wallet_address: user.wallet_address,
+			});
+
+			// Redirige a la página principal después de conectar
+			redirect('/');
+		} catch (error) {
+			console.error("Error connecting to wallet:", error);
 		}
 	};
 

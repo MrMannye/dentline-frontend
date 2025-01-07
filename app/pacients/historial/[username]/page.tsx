@@ -8,7 +8,7 @@ import { obtenerCitasPorPaciente } from '../../../../src/modules/contracts/contr
 import DeleteIcon from '@mui/icons-material/Delete';
 import { DataPacient } from '@/src/utils/types';
 
-export default function Historial(params: DataPacient) {
+export default function Historial({ params }: { params: DataPacient }) {
 	// const [historial, setHistorial] = useState([])
 	const idPaciente = params.username.split("_")[1];
 
