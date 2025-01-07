@@ -32,7 +32,7 @@ function Account() {
 	useEffect(() => {
 		const hasChanged = Object.values(watchAllFields).some((value) => value !== undefined && value !== '');
 		console.log(hasChanged, isValid);
-		setSaveData(!isValid || !hasChanged);
+		setSaveData(!isValid && !hasChanged);
 	}, [watchAllFields, isValid]);
 
 	// Reset form with dentist data

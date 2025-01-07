@@ -60,14 +60,16 @@ export default function CustomizedDialogs(params: any) {
 			fecha: params.fecha_cita,  // Asegúrate de que sea un número entero, probablemente el timestamp
 			motivo: params.motivo,
 			costoTotal: params.costo_total,  // Esto parece ser un valor numérico (puede ser un monto en alguna moneda o unidad)
-			observaciones: params.observaciones || "",
+			observaciones: params.observaciones || "Ni una sola observación",
 		}
+
 		if (message === PAGO_TOTAL) {
-			crearCita(historial)
+			crearCita(historial) // Crear la cita en la blockchain
 			router.push('/dates')
 		}
 		if (message === PAGO_PARCIAL) {
 			params.setOpen(false)
+			router.push(`/reschedule?id_cita=${params.idCita}&abonado=${params.abonado}`)
 		}
 		if (message === ABONO_EXCEDIDO) params.setOpen(false)
 		setOpenAlert(false)
@@ -151,6 +153,7 @@ export default function CustomizedDialogs(params: any) {
 					Abonar
 				</Button>
 			</DialogActions>
+			{/* // Dialog para mostrar el mensaje de confirmación TICKET */}
 			<Dialog
 				open={openAlert}
 				fullScreen

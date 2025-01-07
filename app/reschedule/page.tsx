@@ -63,7 +63,9 @@ export default function Page() {
 			},
 			body: JSON.stringify({
 				id_cita: searchParams.get('id_cita'),
-				fecha_cita: `${patient?.fecha_cita} ${patient?.fecha_start_cita?.getHours().toString().padStart(2, '0')}:${patient?.fecha_start_cita?.getMinutes().toString().padStart(2, '0')}}`,
+				fecha_cita: `${formattedDate} ${startDate?.getHours().toString().padStart(2, '0')}:${startDate?.getMinutes().toString().padStart(2, '0')}}`,
+				numero_paciente: patient?.telefono,
+				abono: searchParams.get('abonado'),
 			})
 		}).then(response => response.json())
 			.then(data => {
