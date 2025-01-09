@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Input, InputAdornment, IconButton, FormControl, InputLabel } from '@mui/material';
 import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
 import EmailIcon from '@mui/icons-material/Email';
@@ -11,71 +11,81 @@ import Avatar from '@mui/material/Avatar';
 import { usePatient } from '@/src/modules/patients/context/PatientContext';
 
 export default function Pacient({ params }: { params: { username: string } }) {
+	const router = useRouter();
+	const [hasVitalSigns, setHasVitalSigns] = useState(false);
 	const [isChanged, setIsChanged] = useState(false);
-	const { register, getValues, reset } = useForm();
+	const { register, handleSubmit, reset, formState: { errors } } = useForm();
 	const id_paciente = params.username.split("_")[1];
 	const { patient, setPatient } = usePatient();
+
+	// Obtener datos del paciente y verificar signos vitales
 	useEffect(() => {
 		const fetchData = async () => {
-			const response = await fetch(`${process.env.NEXT_PUBLIC_API}/pacients/${id_paciente}`);
-			const { data } = await response.json();
-			const pacientData = data[0];
-			console.log(id_paciente, pacientData);
-			setPatient({ id_paciente: id_paciente, ...pacientData });
-			reset({ direccion: pacientData.direccion, profesion: pacientData.profesion, edad: pacientData.edad, estado_civil: pacientData.estado_civil });
-		}
-		fetchData();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+			try {
+				const response = await fetch(`${process.env.NEXT_PUBLIC_API}/pacients/${id_paciente}`);
+				const { data } = await response.json();
+				const pacientData = data[0];
+				setPatient({ id_paciente, ...pacientData });
+				reset({
+					direccion: pacientData.direccion,
+					profesion: pacientData.profesion,
+					edad: pacientData.edad,
+					estado_civil: pacientData.estado_civil,
+				});
 
-	const handleSaveData = (e: React.MouseEvent<HTMLButtonElement>) => {
-		e.preventDefault();
-		const { direccion, profesion, edad, estado_civil } = getValues();
-		console.log(direccion, profesion, edad, estado_civil, id_paciente);
-		fetch(`${process.env.NEXT_PUBLIC_API}/pacients/updatePacientProfile`, {
-			method: 'PUT',
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify({
-				id_paciente: id_paciente,
-				direccion: direccion,
-				profesion: profesion,
-				edad: edad,
-				estado_civil: estado_civil,
-			})
-		})
-			.then(response => response.json())
-			.then(data => {
-				console.log(data);
-			})
-			.catch(error => console.log(error));
+				// Verificar si el paciente tiene signos vitales
+				const vitalSignsResponse = await fetch(`${process.env.NEXT_PUBLIC_API}/pacients/hasVitalSigns/${id_paciente}`);
+				const vitalSignsData = await vitalSignsResponse.json();
+				setHasVitalSigns(vitalSignsData.hasVitalSigns); // true si tiene registros, false si no.
+			} catch (error) {
+				console.error('Error fetching data:', error);
+			}
+		};
+		fetchData();
+	}, [id_paciente, reset, setPatient]);
+
+	// Enviar datos del formulario
+	const onSubmit = async (data: any) => {
+		try {
+			const response = await fetch(`${process.env.NEXT_PUBLIC_API}/pacients/updatePacientProfile`, {
+				method: 'PUT',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({ id_paciente, ...data }),
+			});
+			const result = await response.json();
+			console.log('Profile updated:', result);
+			setIsChanged(false);
+		} catch (error) {
+			console.error('Error updating profile:', error);
+		}
 	};
 
-	const checkChanges = () => {
-		const { direccion, profesion, edad, estado_civil } = getValues();
-		console.log(direccion, profesion, edad, estado_civil);
-		if (direccion !== patient?.direccion) {
-			setIsChanged(true);
-		} else if (profesion !== patient?.profesion) {
-			setIsChanged(true);
-		} else if (edad !== patient?.edad) {
-			setIsChanged(true);
-		} else if (estado_civil !== patient?.estado_civil) {
-			setIsChanged(true);
-		} else {
-			setIsChanged(false);
-		}
-	}
+	const checkChanges = (data: any) => {
+		setIsChanged(
+			data.direccion !== patient?.direccion ||
+			data.profesion !== patient?.profesion ||
+			data.edad !== patient?.edad ||
+			data.estado_civil !== patient?.estado_civil
+		);
+	};
+
+	const handleNavigation = (path: string) => {
+		router.push(path);
+	};
 
 	return (
 		<div className='w-full flex flex-col flex-1'>
 			<div className='flex items-center justify-around w-full bg-secundary-color text-white p-2'>
 				<h3 className='text-center'>PERFIL</h3>
 				<h3 className='text-center'>DATOS</h3>
-				<Link className='' href={`/pacients/historial/${patient?.nombre_paciente}_${id_paciente}`}>
-					<h3 className='text-center'>HISTORIAL</h3>
-				</Link>
+				<h3
+					className='text-center cursor-pointer'
+					onClick={() => handleNavigation(`/pacients/historial/${patient?.nombre_paciente}_${id_paciente}`)}
+				>
+					HISTORIAL
+				</h3>
 			</div>
 
 			<div className='relative bg-primary-color flex flex-col items-center text-white py-8'>
@@ -93,102 +103,115 @@ export default function Pacient({ params }: { params: { username: string } }) {
 					</div>
 				</div>
 			</div>
+
 			<section className='mx-3 mt-8'>
-				<FormControl sx={{ m: 1 }} className='w-full' variant="standard">
-					<InputLabel shrink htmlFor="direccion">Direccion</InputLabel>
-					<Input id="direccion"
-						type='text'
-						{...register('direccion', { required: true })}
-						onKeyUpCapture={() => checkChanges()}
-						className='opacity-40 focus-within:opacity-90'
-						endAdornment={
-							<InputAdornment position="end">
-								<IconButton aria-label="toggle password visibility">
-									<EditIcon />
-								</IconButton>
-							</InputAdornment>
-						}
-					/>
-				</FormControl>
+				<form onSubmit={handleSubmit(onSubmit)}>
+					<FormControl sx={{ m: 1 }} className='w-full' variant="standard">
+						<InputLabel shrink htmlFor="direccion">Dirección</InputLabel>
+						<Input
+							id="direccion"
+							type='text'
+							{...register('direccion', { required: 'La dirección es obligatoria.' })}
+							onBlur={(e) => checkChanges(e.target.form)}
+							className='opacity-40 focus-within:opacity-90'
+							endAdornment={
+								<InputAdornment position="end">
+									<IconButton aria-label="toggle edit">
+										<EditIcon />
+									</IconButton>
+								</InputAdornment>
+							}
+						/>
+						{errors.direccion && <span className="text-red-500 text-xs">{errors.direccion.message?.toString()}</span>}
+					</FormControl>
 
-				<FormControl sx={{ marginY: 0.8, marginX: 1 }} className='w-full' variant="standard">
-					<InputLabel shrink htmlFor="profesion">Profesion</InputLabel>
-					<Input
-						id="profesion"
-						type='text'
-						{...register('profesion', { required: true })}
-						onKeyUpCapture={() => checkChanges()}
-						className='opacity-40 focus-within:opacity-90'
-						endAdornment={
-							<InputAdornment position="end">
-								<IconButton aria-label="toggle password visibility">
-									<EditIcon />
-								</IconButton>
-							</InputAdornment>
-						}
-					/>
-				</FormControl>
+					<FormControl sx={{ marginY: 0.8, marginX: 1 }} className='w-full' variant="standard">
+						<InputLabel shrink htmlFor="profesion">Profesión</InputLabel>
+						<Input
+							id="profesion"
+							type='text'
+							{...register('profesion', { required: 'La profesión es obligatoria.' })}
+							onBlur={(e) => checkChanges(e.target.form)}
+							className='opacity-40 focus-within:opacity-90'
+							endAdornment={
+								<InputAdornment position="end">
+									<IconButton aria-label="toggle edit">
+										<EditIcon />
+									</IconButton>
+								</InputAdornment>
+							}
+						/>
+						{errors.profesion && <span className="text-red-500 text-xs">{errors.profesion.message?.toString()}</span>}
+					</FormControl>
 
-				<FormControl sx={{ marginY: 0.8, marginX: 1 }} className='w-full' variant="standard">
-					<InputLabel shrink htmlFor={`standard-adornment-edad`}>Edad</InputLabel>
-					<Input
-						id={`standard-adornment-edad`}
-						type='number'
-						{...register('edad', { required: true })}
-						onKeyUpCapture={() => checkChanges()}
-						className='opacity-40 focus-within:opacity-90'
-						endAdornment={
-							<InputAdornment position="end">
-								<IconButton aria-label="toggle password visibility">
-									<EditIcon />
-								</IconButton>
-							</InputAdornment>
-						}
-					/>
-				</FormControl>
+					<FormControl sx={{ marginY: 0.8, marginX: 1 }} className='w-full' variant="standard">
+						<InputLabel shrink htmlFor={`edad`}>Edad</InputLabel>
+						<Input
+							id={`edad`}
+							type='number'
+							{...register('edad', { required: 'La edad es obligatoria.' })}
+							onBlur={(e) => checkChanges(e.target.form)}
+							className='opacity-40 focus-within:opacity-90'
+							endAdornment={
+								<InputAdornment position="end">
+									<IconButton aria-label="toggle edit">
+										<EditIcon />
+									</IconButton>
+								</InputAdornment>
+							}
+						/>
+						{errors.edad && <span className="text-red-500 text-xs">{errors.edad.message?.toString()}</span>}
+					</FormControl>
 
-				<FormControl sx={{ m: 1 }} className='w-full' variant="standard">
-					<InputLabel shrink htmlFor="estado_civil">Estado Civil</InputLabel>
-					<Input
-						id="estado_civil"
-						type='text'
-						{...register('estado_civil', { required: true })}
-						onKeyUpCapture={() => checkChanges()}
-						className='opacity-40 focus-within:opacity-90'
-						endAdornment={
-							<InputAdornment position="end">
-								<IconButton aria-label="toggle password visibility">
-									<EditIcon />
-								</IconButton>
-							</InputAdornment>
-						}
-					/>
-				</FormControl>
+					<FormControl sx={{ m: 1 }} className='w-full' variant="standard">
+						<InputLabel shrink htmlFor="estado_civil">Estado Civil</InputLabel>
+						<Input
+							id="estado_civil"
+							type='text'
+							{...register('estado_civil', { required: 'El estado civil es obligatorio.' })}
+							onBlur={(e) => checkChanges(e.target.form)}
+							className='opacity-40 focus-within:opacity-90'
+							endAdornment={
+								<InputAdornment position="end">
+									<IconButton aria-label="toggle edit">
+										<EditIcon />
+									</IconButton>
+								</InputAdornment>
+							}
+						/>
+						{errors.estado_civil && <span className="text-red-500 text-xs">{errors.estado_civil.message?.toString()}</span>}
+					</FormControl>
+
+					<div className="flex flex-col items-center mt-4">
+						<button
+							type="submit"
+							className={`h-12 w-44 rounded-xl border border-primary-pressed bg-secundary-normal flex items-center justify-center mb-2 disabled:opacity-35 text-primary-pressed`}
+							disabled={!isChanged}
+						>
+							GUARDAR DATOS
+						</button>
+					</div>
+				</form>
 			</section>
+
 			<div className="flex flex-col items-center mt-4">
-				<button
-					className={`h-12 w-44 rounded-xl border border-1 border-primary-pressed bg-secundary-normal flex items-center justify-center mb-2 disabled:opacity-35 text-primary-pressed`}
-					disabled={!isChanged}
-					onClick={(e) => handleSaveData(e)}
-				>
-					GUARDAR DATOS
-				</button>
 				<span className="h-12 w-44 text-primary-pressed flex items-center justify-center">Continuar con:</span>
 				<div className="flex space-x-4">
-					<Link
-						href={"/date"}
-						className="h-12 w-44 rounded-xl border border-1 border-primary-pressed bg-secundary-normal text-primary-pressed flex items-center justify-center"
+					<button
+						className="h-12 w-44 rounded-xl border border-primary-pressed bg-secundary-normal text-primary-pressed flex items-center justify-center disabled:opacity-50"
+						disabled={!hasVitalSigns}
+						onClick={() => handleNavigation("/date")}
 					>
 						CITA
-					</Link>
-					<Link
-						href={`/consult/${patient?.nombre_paciente}`}
-						className="h-12 w-44 rounded-xl text-secundary-normal bg-primary-pressed shadow-xl flex items-center justify-center"
+					</button>
+					<button
+						className="h-12 w-44 rounded-xl text-secundary-normal bg-primary-pressed shadow-xl flex items-center justify-center disabled:opacity-50"
+						onClick={() => handleNavigation(`/consult/${patient?.nombre_paciente}`)}
 					>
 						CONSULTA
-					</Link>
+					</button>
 				</div>
 			</div>
 		</div>
-	)
+	);
 }

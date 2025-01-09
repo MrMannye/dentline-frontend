@@ -16,7 +16,7 @@ function Account() {
 
 	const {
 		register,
-		getValues,
+		handleSubmit,
 		reset,
 		watch,
 		formState: { isValid, errors },
@@ -31,7 +31,6 @@ function Account() {
 	// Update save button state whenever fields change
 	useEffect(() => {
 		const hasChanged = Object.values(watchAllFields).some((value) => value !== undefined && value !== '');
-		console.log(hasChanged, isValid);
 		setSaveData(!isValid && !hasChanged);
 	}, [watchAllFields, isValid]);
 
@@ -56,12 +55,10 @@ function Account() {
 		} else {
 			setCardType(null);
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [watch('tarjeta')]);
 
-	const handleSaveData = (e: React.MouseEvent<HTMLInputElement>) => {
-		e.preventDefault();
-		const { correo, nombre, telefono, clabe, tarjeta } = getValues();
+	const onSubmit = (data: any) => {
+		const { correo, nombre, telefono, clabe, tarjeta } = data;
 
 		fetch(`${process.env.NEXT_PUBLIC_API}/dentist/updateDentist`, {
 			method: 'PUT',
@@ -92,76 +89,76 @@ function Account() {
 					numero_tarjeta: tarjeta,
 					wallet_address: account || '',
 				});
-				// Desactiva el botón después de guardar exitosamente
-
 			})
 			.catch((error) => console.log(error));
 	};
 
 	return (
 		<div className='w-full flex-1'>
-			<div className='bg-secundary-color h-20 mb-12 flex items-center px-4 space-x-4'>
-				<Avatar className='mt-10' sx={{ width: 82, height: 82 }} src={'/img/home_image.png'} alt='User Image' />
-				<article className='mt-2'>
-					<FormControl sx={{ marginY: 0.8 }} className='w-full' variant='standard'>
-						<Input
-							id='standard-adornment-nombre'
-							type='text'
-							placeholder='Nombre Dentista'
-							{...register('nombre', { required: 'El nombre es obligatorio.' })}
-							className='opacity-40 focus-within:opacity-90'
-							endAdornment={
-								<InputAdornment position='end'>
-									<EditIcon />
-								</InputAdornment>
-							}
-						/>
-						{errors.nombre && <span className='text-red-500'>{errors.root?.message}</span>}
-					</FormControl>
-					<h2 className='text-sm text-primary-color'>Dentista</h2>
-				</article>
-			</div>
-
-			<div className='px-4 flex flex-col items-start space-y-4'>
-				{accountInputs.map((input) => (
-					<FormControl key={input.name} sx={{ marginY: 0.8, marginX: 1 }} className='w-full' variant='standard'>
-						<InputLabel shrink htmlFor={`standard-adornment-${input.name}`}>
-							{input.name}
-						</InputLabel>
-						<Input
-							id={`standard-adornment-${input.name}`}
-							type='text'
-							disabled={input.visible}
-							{...register(input.register, {
-								required: input.required && `${input.name} es obligatorio.`,
-								minLength: input.min && { value: input.min, message: `Mínimo ${input.min} caracteres.` },
-								maxLength: input.max && { value: input.max, message: `Máximo ${input.max} caracteres.` },
-							})}
-							className='opacity-40 focus-within:opacity-90'
-							endAdornment={
-								<InputAdornment position='end'>
-									{input.register === 'tarjeta' && cardType ? (
-										<Image src={`/icons/${cardType.cardType.toLowerCase()}.svg`} width={48} height={48} alt={`${cardType} Logo`} />
-									) : (
+			<form onSubmit={handleSubmit(onSubmit)}>
+				<div className='bg-secundary-color h-20 mb-12 flex items-center px-4 space-x-4'>
+					<Avatar className='mt-10' sx={{ width: 82, height: 82 }} src={'/img/home_image.png'} alt='User Image' />
+					<article className='mt-2'>
+						<FormControl sx={{ marginY: 0.8 }} className='w-full' variant='standard'>
+							<Input
+								id='standard-adornment-nombre'
+								type='text'
+								placeholder='Nombre Dentista'
+								{...register('nombre', { required: 'El nombre es obligatorio.' })}
+								className='opacity-40 focus-within:opacity-90'
+								endAdornment={
+									<InputAdornment position='end'>
 										<EditIcon />
-									)}
-								</InputAdornment>
-							}
-						/>
-						{errors[input.register] && <span className='text-red-500'>{errors[input.register]?.root?.message?.toString()}</span>}
-					</FormControl>
-				))}
-
-				<div className='flex flex-col items-center w-full'>
-					<input
-						type='button'
-						onClick={(e) => handleSaveData(e)}
-						disabled={saveData}
-						value={'GUARDAR'}
-						className='h-12 w-full rounded-xl text-secundary-normal bg-primary-pressed shadow-xl text-center disabled:bg-primary-disable'
-					/>
+									</InputAdornment>
+								}
+							/>
+							{errors.nombre && <span className='text-red-500 !text-sm'>{errors.nombre.message?.toString()}</span>}
+						</FormControl>
+						<h2 className='text-sm text-primary-color'>Dentista</h2>
+					</article>
 				</div>
-			</div>
+
+				<div className='px-4 flex flex-col items-start space-y-4'>
+					{accountInputs.map((input) => (
+						<FormControl key={input.name} sx={{ marginY: 0.8, marginX: 1 }} className='w-full' variant='standard'>
+							<InputLabel shrink htmlFor={`standard-adornment-${input.name}`}>
+								{input.name}
+							</InputLabel>
+							<Input
+								id={`standard-adornment-${input.name}`}
+								type='text'
+								disabled={input.visible}
+								{...register(input.register, {
+									required: input.required && `${input.name} es obligatorio.`,
+									minLength: input?.min && { value: input.min, message: `Mínimo ${input.min} caracteres.` },
+									maxLength: input?.max && { value: input.max, message: `Máximo ${input.max} caracteres.` },
+								})}
+								className='opacity-40 focus-within:opacity-90'
+								endAdornment={
+									<InputAdornment position='end'>
+										{input.register === 'tarjeta' && cardType ? (
+											<Image src={`/icons/${cardType.cardType.toLowerCase()}.svg`} width={48} height={48} alt={`${cardType} Logo`} />
+										) : (
+											<EditIcon />
+										)}
+									</InputAdornment>
+								}
+							/>
+							{errors[input.register] && <span className='text-red-500 text-xs'>{errors[input.register]?.message?.toString()}</span>}
+						</FormControl>
+					))}
+
+					<div className='flex flex-col items-center w-full'>
+						<button
+							type='submit'
+							disabled={saveData}
+							className='h-12 w-full rounded-xl text-secundary-normal bg-primary-pressed shadow-xl text-center disabled:bg-primary-disable'
+						>
+							GUARDAR
+						</button>
+					</div>
+				</div>
+			</form>
 		</div>
 	);
 }
