@@ -80,13 +80,9 @@ export default function Historial({ params }: { params: DataPacient }) {
 					return (
 						<div className='rounded-xl flex flex-col' key={index}>
 							<span className='bg-acent-color text-white text-center rounded-t-xl'>{formatearFechaConHora(cita.fecha)}</span>
-							<div className='flex flex-col justify-between mx-4 my-2'>
-								<h2 className='text-xl'>{cita.nombreDentista}</h2>
-								<span><strong>Telefono: </strong>{cita.telefonoDentista}</span>
-							</div>
 							<hr />
 							<div className='mx-4 flex flex-col my-2'>
-								<h3 className='text-gray-700'><strong>Paciente: </strong>{cita.nombrePaciente}</h3>
+								<h3 className='text-gray-700'><strong>Paciente: </strong>{cita.idPaciente}</h3>
 								<span className='text-sm text-gray-700'><strong>Profesion: </strong>{cita.profesionPaciente}</span>
 								<span className='text-sm text-gray-700'><strong>Edad: </strong>{cita.edadPaciente}</span>
 								<span className='text-sm text-gray-700'><strong>Alergias: </strong>{cita.alergias} <strong>Sangre: </strong>{cita.tipoSangre}</span>

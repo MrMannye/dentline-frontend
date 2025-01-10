@@ -38,7 +38,7 @@ export default function Pacients() {
 		nombre: null,
 	});
 
-
+	// Obtener lista de pacientes
 	const fetchData = async () => {
 		const response = await fetch(`${process.env.NEXT_PUBLIC_API}/dentist/allPacients/${dentist?.id_dentista}`);
 		const data = await response.json();
@@ -51,20 +51,23 @@ export default function Pacients() {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
+	// Función de búsqueda
 	const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
-		const query = event.target.value;
+		const query = event.target.value.trim().toLowerCase();
 		setSearchTerm(query);
 
-		if (query.trim() === '') {
+		if (query === '') {
 			setFilteredPacientes(pacientes);
 		} else {
 			const filtered = pacientes.filter(paciente =>
-				paciente.nombre_paciente.toLowerCase().includes(query.toLowerCase())
+				paciente.nombre_paciente.toLowerCase().includes(query) ||
+				paciente.id_paciente.toString().includes(query) // Búsqueda por nombre o ID
 			);
 			setFilteredPacientes(filtered);
 		}
 	};
 
+	// Función para manejar la entrada del formulario de nuevo paciente
 	const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = e.target;
 		setNewPaciente(prev => ({ ...prev, [name]: value }));
@@ -115,7 +118,7 @@ export default function Pacients() {
 					type="text"
 					value={searchTerm}
 					onChange={handleSearch}
-					placeholder="Buscar paciente..."
+					placeholder="Buscar paciente por nombre o ID..."
 					className="w-full px-4 py-3 pl-10 rounded-lg border-0 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
 				/>
 				<SearchIcon className="text-gray-400 w-5 h-5 absolute right-3" />
@@ -126,11 +129,12 @@ export default function Pacients() {
 				<div key={paciente.id_paciente} className="flex items-center justify-between space-x-4">
 					<Link href={`/pacients/${paciente.nombre_paciente}_${paciente.id_paciente}`} className="flex items-center space-x-4">
 						<Avatar image={"/img/home_image.png"} />
-						<span className='text-base'>{paciente.nombre_paciente}</span>
+						{/* Mostrar nombre seguido del ID */}
+						<span className='text-base'>{`${paciente.nombre_paciente} - ${paciente.id_paciente}`}</span>
 					</Link>
 					<MoreVertIcon
 						onClick={() => openDeleteModal(paciente.id_paciente, paciente.nombre_paciente)}
-						className="ml-auto"
+						className="ml-auto cursor-pointer"
 					>
 						<DeleteIcon />
 					</MoreVertIcon>
@@ -253,7 +257,6 @@ export default function Pacients() {
 					</div>
 				</Box>
 			</Modal>
-
 
 			{/* Modal para confirmar eliminación */}
 			<Modal open={deleteModalOpen} onClose={() => setDeleteModalOpen(false)}>
