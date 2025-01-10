@@ -6,16 +6,16 @@ contract ClinicaDental {
     struct Cita {
         uint idCita;
         uint idPaciente;
-        string nombrePaciente;
         string profesionPaciente;
         uint edadPaciente;
+		string peso;
+		string pulso;
+		string antecedentes_medicos;
         string tipoSangre;
         string alergias;
         string nombreDentista;
-        string telefonoDentista;
         uint fecha;
         string motivo;
-        uint costoTotal;
         string observaciones;
         address dentistaWallet;
     }
@@ -28,7 +28,7 @@ contract ClinicaDental {
     address private admin;
     mapping(address => bool) private personalAutorizado;
 
-    event CitaAgregada(uint idCita, string nombrePaciente, string nombreDentista, uint fecha);
+    event CitaAgregada(uint idCita, uint idPaciente, string nombreDentista, uint fecha);
 
     constructor() {
         admin = msg.sender;
@@ -47,38 +47,38 @@ contract ClinicaDental {
     // Función para agregar una nueva cita
     function agregarCita(
         uint _idPaciente,
-        string memory _nombrePaciente,
         string memory _profesionPaciente,
         uint _edadPaciente,
+		string memory _peso,
+		string memory _pulso,
+		string memory _antecedentes_medicos,
         string memory _tipoSangre,
         string memory _alergias,
         string memory _nombreDentista,
-        string memory _telefonoDentista,
         uint _fecha,
         string memory _motivo,
-        uint _costoTotal,
         string memory _observaciones
     ) public soloAutorizado {
         Cita memory nuevaCita = Cita(
             siguienteIdCita,
             _idPaciente,
-            _nombrePaciente,
             _profesionPaciente,
             _edadPaciente,
+			_peso,
+			_pulso,
+			_antecedentes_medicos,
             _tipoSangre,
             _alergias,
             _nombreDentista,
-            _telefonoDentista,
             _fecha,
             _motivo,
-            _costoTotal,
             _observaciones,
             msg.sender // Almacena la dirección del dentista que crea la cita
         );
 
         citas.push(nuevaCita);
         citasPorPaciente[_idPaciente].push(siguienteIdCita);
-        emit CitaAgregada(siguienteIdCita, _nombrePaciente, _nombreDentista, _fecha);
+        emit CitaAgregada(siguienteIdCita, _idPaciente, _nombreDentista, _fecha);
         siguienteIdCita++;
     }
 

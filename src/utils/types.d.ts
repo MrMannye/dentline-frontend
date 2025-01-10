@@ -6,6 +6,10 @@ interface HistorialCita {
 	alergias: string;           // Alergias del paciente
 	costoTotal: number;         // Costo total de la cita (en número)
 	edadPaciente: number;       // Edad del paciente
+	peso: string;               // Peso del paciente
+	presion: string;            // Presión del paciente
+	pulso: string;              // Pulso del paciente
+	antecedentes_medicos: string; // Antecedentes médicos del paciente
 	fecha: string;              // Fecha de la cita (puede ser un timestamp o un string legible)
 	idPaciente: number;         // ID del paciente (entero)
 	motivo: string;             // Motivo de la cita

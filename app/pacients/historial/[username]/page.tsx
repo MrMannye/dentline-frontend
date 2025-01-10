@@ -80,14 +80,17 @@ export default function Historial({ params }: { params: DataPacient }) {
 					return (
 						<div className='rounded-xl flex flex-col' key={index}>
 							<span className='bg-acent-color text-white text-center rounded-t-xl'>{formatearFechaConHora(cita.fecha)}</span>
-							<hr />
 							<div className='mx-4 flex flex-col my-2'>
 								<h3 className='text-gray-700'><strong>Paciente: </strong>{cita.idPaciente}</h3>
 								<span className='text-sm text-gray-700'><strong>Profesion: </strong>{cita.profesionPaciente}</span>
 								<span className='text-sm text-gray-700'><strong>Edad: </strong>{cita.edadPaciente}</span>
-								<span className='text-sm text-gray-700'><strong>Alergias: </strong>{cita.alergias} <strong>Sangre: </strong>{cita.tipoSangre}</span>
 							</div>
 							<hr />
+							<div className='mx-4 my-2 flex flex-col'>
+								<span className='text-sm text-gray-700'><strong>Alergias: </strong>{cita.alergias} <strong>Sangre: </strong>{cita.tipoSangre}</span>
+								<span className='text-sm text-gray-700'><strong>Peso: </strong>{cita.peso} <strong>Pulso: </strong>{cita.pulso}</span>
+								<span className='text-sm text-gray-700'><strong>Antecedentes Medicos: </strong>{cita.antecedentes_medicos}</span>
+							</div>
 							<div className='text-xs mx-4 my-2 text-gray-400 flex flex-col'>
 								<h2 className='uppercase font-bold text-gray-700 mb-1'>Procedimientos:</h2>
 								{formatearMotivo(cita.motivo).map((procedimiento, index) => {
@@ -99,7 +102,6 @@ export default function Historial({ params }: { params: DataPacient }) {
 							</div>
 							<hr />
 							<div className='text-xs mx-4 my-2 flex flex-col space-y-[3px]'>
-								<h3 className='font-bold text-gray-700'>Costo: <span className='font-normal text-gray-400'>$ {cita.costoTotal}</span></h3>
 								<h3 className='font-bold text-gray-700'>Fecha: <span className='font-normal text-gray-400'>{cita.fecha}</span></h3>
 								<h3 className='font-bold text-gray-700'>Notas: <span className='font-normal text-gray-400'>
 									{cita.observaciones}
