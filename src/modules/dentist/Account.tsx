@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -12,8 +13,7 @@ import { useWallet } from '@/src/modules/auth/context/WalletContext';
 import getTypeCard from '@/src/modules/dentist/utils/getTypeCard';
 
 function Account() {
-	const { account, dentist, setDentist } = useWallet();
-
+	const { account, dentist, setDentist, web3 } = useWallet();
 	const {
 		register,
 		handleSubmit,
@@ -55,8 +55,10 @@ function Account() {
 		} else {
 			setCardType(null);
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [watch('tarjeta')]);
 
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const onSubmit = (data: any) => {
 		const { correo, nombre, telefono, clabe, tarjeta } = data;
 
@@ -93,6 +95,21 @@ function Account() {
 			.catch((error) => console.log(error));
 	};
 
+	// Logout handler
+	const handleLogout = async () => {
+		try {
+			if (web3?.currentProvider && typeof web3.currentProvider.disconnect === 'function') {
+				await web3.currentProvider.disconnect(); // Desconecta el proveedor si es compatible
+			}
+			localStorage.removeItem('account');
+			localStorage.removeItem('dentist');
+			setDentist(null);
+			window.location.href = '/login'; // Redirige al login después de hacer logout
+		} catch (error) {
+			console.error('Error during logout:', error);
+		}
+	};
+
 	return (
 		<div className='w-full flex-1'>
 			<form onSubmit={handleSubmit(onSubmit)}>
@@ -118,7 +135,7 @@ function Account() {
 					</article>
 				</div>
 
-				<div className='px-4 flex flex-col items-start space-y-4'>
+				<div className='px-4 flex flex-col items-start space-y-5'>
 					{accountInputs.map((input) => (
 						<FormControl key={input.name} sx={{ marginY: 0.8, marginX: 1 }} className='w-full' variant='standard'>
 							<InputLabel shrink htmlFor={`standard-adornment-${input.name}`}>
@@ -148,13 +165,20 @@ function Account() {
 						</FormControl>
 					))}
 
-					<div className='flex flex-col items-center w-full'>
+					<div className='flex flex-col items-center w-full !mt-8'>
 						<button
 							type='submit'
 							disabled={saveData}
 							className='h-12 w-full rounded-xl text-secundary-normal bg-primary-pressed shadow-xl text-center disabled:bg-primary-disable'
 						>
 							GUARDAR
+						</button>
+						<button
+							type='button'
+							onClick={handleLogout}
+							className='mt-4 h-12 w-full rounded-xl text-white bg-red-600 shadow-xl text-center'
+						>
+							CERRAR SESIÓN
 						</button>
 					</div>
 				</div>
