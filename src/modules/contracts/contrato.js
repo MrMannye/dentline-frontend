@@ -1,7 +1,7 @@
 import Web3 from "web3";
 import contractData from "../../../build/contracts/ClinicaDental.json"; // Ruta al ABI del contrato
 
-const CONTRACT_ADDRESS = "0xF111D49d2604b5406F59DE0CC9965B863321975E"; // Dirección del contrato    
+const CONTRACT_ADDRESS = "0x8377fFc9E044062e68eec5a2A2d02A722bBFD43D"; // Dirección del contrato    
 const abi = contractData.abi; // ABI del contrato
 
 // Instancia de Web3
@@ -15,8 +15,8 @@ const getWeb3 = () => {
 
 // Función para crear una cita
 export const crearCita = async (datosCita) => {
-	let { idPaciente, nombrePaciente, profesionPaciente, edadPaciente, tipoSangre, alergias,
-		nombreDentista, telefonoDentista, fecha, motivo, costoTotal, observaciones } = datosCita;
+	let { idPaciente, profesionPaciente, peso, pulso, edadPaciente, tipoSangre, alergias,
+		nombreDentista, fecha, motivo, antecedentes_medicos, observaciones } = datosCita;
 	try {
 		const web3 = getWeb3();
 		const contrato = new web3.eth.Contract(abi, CONTRACT_ADDRESS);
@@ -31,16 +31,16 @@ export const crearCita = async (datosCita) => {
 		const tx = await contrato.methods
 			.agregarCita(
 				idPaciente,           // El ID del paciente
-				nombrePaciente,
 				profesionPaciente,
 				edadPaciente,
+				peso,
+				pulso,
+				antecedentes_medicos,
 				tipoSangre,
 				alergias, // Asegúrate de que 'alergias' sea un arreglo
 				nombreDentista,
-				telefonoDentista,
 				new Date(fecha).getTime() / 1000, // Convierte la fecha a timestamp
 				motivo,
-				costoTotal.toString(),
 				observaciones
 			)
 			.send({ from: accounts[0] });
@@ -94,16 +94,16 @@ export const obtenerCitasPorPaciente = async (idPaciente) => {
 		// Formatear las citas para facilitar el uso en el frontend
 		const citasFormateadas = citas.map((cita) => ({
 			idPaciente: Number(cita.idPaciente), // Convertir a Number
-			nombrePaciente: cita.nombrePaciente,
 			profesionPaciente: cita.profesionPaciente,
 			edadPaciente: Number(cita.edadPaciente), // Convertir a Number
+			peso: cita.peso, // Convertir a Number
+			pulso: cita.pulso, // Convertir a Number
+			antecedentes_medicos: cita.antecedentes_medicos,
 			tipoSangre: cita.tipoSangre,
 			alergias: cita.alergias,
 			nombreDentista: cita.nombreDentista,
-			telefonoDentista: cita.telefonoDentista,
 			fecha: new Date(Number(cita.fecha) * 1000).toLocaleString(), // Convertir timestamp (BigInt) a Number y luego a fecha
 			motivo: cita.motivo,
-			costoTotal: Number(cita.costoTotal), // Convertir de BigInt (Wei) a ETH
 			observaciones: cita.observaciones,
 		}));
 

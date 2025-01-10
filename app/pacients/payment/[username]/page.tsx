@@ -22,6 +22,10 @@ interface DatePacient {
 	id_paciente: number,
 	profresion: string,
 	edad: number,
+	peso: string,
+	pulso: string,
+	presion: string,
+	antecedentes_medicos: string,
 	tipo_sangre: string,
 	alergias: string,
 }

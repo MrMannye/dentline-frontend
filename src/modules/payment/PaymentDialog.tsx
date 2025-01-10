@@ -55,6 +55,10 @@ export default function CustomizedDialogs(params: any) {
 			edadPaciente: params.edad || "",
 			tipoSangre: params.tipo_sangre || "",
 			alergias: params.alergias || "",
+			peso: params.peso.toString() || "",
+			pulso: params.pulso.toString() || "",
+			presion: params.presion.toString() || "",
+			antecedentes_medicos: params.antecedentes_medicos.toString() || "",
 			nombreDentista: dentist?.nombre || "",
 			telefonoDentista: dentist?.telefono || "",
 			fecha: params.fecha_cita,  // Asegúrate de que sea un número entero, probablemente el timestamp
