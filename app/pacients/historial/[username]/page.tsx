@@ -79,7 +79,7 @@ export default function Historial({ params }: { params: DataPacient }) {
 				{historial?.map((cita, index) => {
 					return (
 						<div className='rounded-xl flex flex-col' key={index}>
-							<span className='bg-acent-color text-white text-center rounded-t-xl'>{formatearFechaConHora(cita.fecha)}</span>
+							<span className='bg-acent-color text-white text-center rounded-t-xl'>{cita.fecha}</span>
 							<div className='mx-4 flex flex-col my-2'>
 								<h3 className='text-gray-700'><strong>Paciente: </strong>{cita.idPaciente}</h3>
 								<span className='text-sm text-gray-700'><strong>Profesion: </strong>{cita.profesionPaciente}</span>

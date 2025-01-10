@@ -76,13 +76,11 @@ export default function CardDate() {
 			const data = await response.json();
 			console.log(data);
 			if (response.ok) {
-				alert('Cita eliminada exitosamente');
 				await fetchData(); // Actualiza la lista de citas
 			} else {
-				alert(`Error al eliminar la cita: ${data}`);
+				console.log(`Error al eliminar la cita: ${data}`);
 			}
 		} catch (error) {
-			alert('Hubo un error al intentar eliminar la cita.');
 			console.error('Error al eliminar la cita:', error);
 		}
 	};
