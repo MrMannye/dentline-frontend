@@ -44,7 +44,7 @@ export default function Home() {
 					<div className="flex justify-around items-center h-20 rounded-xl bg-primary-color shadow-lg">
 						<Avatar image="/icons/pacient.svg" />
 						<div className="text-white text-center">
-							<span className="font-bold text-4xl">{patientCount !== null ? `${patientCount}` : 'Cargando...'}</span>
+							<span className="font-bold text-4xl">{patientCount !== null ? `${patientCount}` : '0'}</span>
 						</div>
 					</div>
 
