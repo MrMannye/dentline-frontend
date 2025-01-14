@@ -1224,3 +1224,30 @@ body {
 	right: 233px;
 	bottom: 281px;
 }
+
+.bg-gradient-to-b {
+	background: linear-gradient(to bottom, #1e3a8a, #2563eb);
+}
+
+.tooth {
+	transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.selected-tooth {
+	transform: scale(1.3);
+	/* Agrandar un 30% al ser seleccionado */
+	border-radius: 50%;
+	/* Leve fondo */
+	box-shadow: 0 0 15px rgba(255, 165, 0, 0.5);
+}
+
+.num-teeth {
+	font-size: 14px;
+	font-weight: bold;
+	margin-top: 4px;
+	color: #ffffff;
+}
+
+.text-orange-500 {
+	color: #ff6600;
+}

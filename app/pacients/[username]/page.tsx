@@ -59,6 +59,20 @@ export default function Pacient({ params }: { params: { username: string } }) {
 			const result = await response.json();
 			console.log('Profile updated:', result);
 			setIsChanged(false);
+			try {
+				const response = await fetch(`${process.env.NEXT_PUBLIC_API}/pacients/${id_paciente}`);
+				const { data } = await response.json();
+				const pacientData = data[0];
+				setPatient({ id_paciente, ...pacientData });
+				reset({
+					direccion: pacientData.direccion,
+					profesion: pacientData.profesion,
+					edad: pacientData.edad,
+					estado_civil: pacientData.estado_civil,
+				});
+			} catch (error) {
+				console.error('Error fetching data:', error);
+			}
 		} catch (error) {
 			console.error('Error updating profile:', error);
 		}
