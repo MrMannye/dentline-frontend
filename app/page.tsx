@@ -37,7 +37,6 @@ export default function Home() {
 			{/* Información principal */}
 			<div className="p-4 mt-7">
 				<h1 className="text-2xl font-bold text-primary-color mb-4">¡Bienvenido, {dentist?.nombre}!</h1>
-
 				{/* Sección de pacientes */}
 				<div className="flex flex-col space-y-4">
 					<h2 className="font-bold text-xl text-[#565656]">Tus Pacientes</h2>

@@ -9,10 +9,22 @@ import SearchIcon from '@mui/icons-material/Search';
 import { useWallet } from '@/src/modules/auth/context/WalletContext';
 import DeleteIcon from '@mui/icons-material/Delete';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import { useForm } from 'react-hook-form';
 
 interface Paciente {
 	id_paciente: number;
 	nombre_paciente: string;
+}
+
+interface FormInputs {
+	nombre: string;
+	profesion: string;
+	edad: number;
+	estado_civil: string;
+	fecha_nacimiento: string;
+	direccion: string;
+	telefono: string;
+	email: string;
 }
 
 export default function Pacients() {
@@ -20,25 +32,20 @@ export default function Pacients() {
 	const [pacientes, setPacientes] = useState<Paciente[]>([]);
 	const [searchTerm, setSearchTerm] = useState<string>('');
 	const [filteredPacientes, setFilteredPacientes] = useState<Paciente[]>([]);
-	const [isModalOpen, setIsModalOpen] = useState(false); // Estado para el modal
-	const [newPaciente, setNewPaciente] = useState({
-		nombre: '',
-		profesion: '',
-		edad: '',
-		estado_civil: '',
-		fecha_nacimiento: '',
-		direccion: '',
-		telefono: '',
-		email: '',
-		id_dentista: dentist?.id_dentista,
-	});
+	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 	const [selectedPaciente, setSelectedPaciente] = useState<{ id: number | null; nombre: string | null }>({
 		id: null,
 		nombre: null,
 	});
 
-	// Obtener lista de pacientes
+	const {
+		register,
+		handleSubmit,
+		formState: { errors },
+		reset
+	} = useForm();
+
 	const fetchData = async () => {
 		const response = await fetch(`${process.env.NEXT_PUBLIC_API}/dentist/allPacients/${dentist?.id_dentista}`);
 		const data = await response.json();
@@ -51,7 +58,6 @@ export default function Pacients() {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
-	// Función de búsqueda
 	const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
 		const query = event.target.value.trim().toLowerCase();
 		setSearchTerm(query);
@@ -61,19 +67,19 @@ export default function Pacients() {
 		} else {
 			const filtered = pacientes.filter(paciente =>
 				paciente.nombre_paciente.toLowerCase().includes(query) ||
-				paciente.id_paciente.toString().includes(query) // Búsqueda por nombre o ID
+				paciente.id_paciente.toString().includes(query)
 			);
 			setFilteredPacientes(filtered);
 		}
 	};
 
-	// Función para manejar la entrada del formulario de nuevo paciente
-	const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		const { name, value } = e.target;
-		setNewPaciente(prev => ({ ...prev, [name]: value }));
-	};
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	const onSubmit = async (data: any) => {
+		const newPaciente = {
+			...data,
+			id_dentista: dentist?.id_dentista,
+		};
 
-	const handleSubmit = async () => {
 		const response = await fetch(`${process.env.NEXT_PUBLIC_API}/pacients/addPaciente`, {
 			method: 'POST',
 			headers: {
@@ -81,10 +87,11 @@ export default function Pacients() {
 			},
 			body: JSON.stringify(newPaciente),
 		});
-		console.log(response);
+
 		if (response.ok) {
 			await fetchData();
-			setIsModalOpen(false); // Cerrar el modal
+			setIsModalOpen(false);
+			reset();
 		}
 	};
 
@@ -94,20 +101,19 @@ export default function Pacients() {
 	};
 
 	const handleDelete = async () => {
-		if (selectedPaciente === null) return;
+		if (!selectedPaciente.id) return;
 
 		const response = await fetch(`${process.env.NEXT_PUBLIC_API}/pacients/deletePaciente/${selectedPaciente.id}`, {
 			method: 'DELETE',
 		});
 
 		if (response.ok) {
-			await fetchData(); // Recargar la lista de pacientes
+			await fetchData();
+			setDeleteModalOpen(false);
+			setSelectedPaciente({ id: null, nombre: null });
 		} else {
 			console.error('Error al eliminar el paciente');
 		}
-
-		setDeleteModalOpen(false);
-		setSelectedPaciente({ id: null, nombre: null });
 	};
 
 	return (
@@ -124,12 +130,11 @@ export default function Pacients() {
 				<SearchIcon className="text-gray-400 w-5 h-5 absolute right-3" />
 			</div>
 
-			{/* Muestra los pacientes filtrados */}
+			{/* Lista de pacientes */}
 			{filteredPacientes.map((paciente) => (
 				<div key={paciente.id_paciente} className="flex items-center justify-between space-x-4">
 					<Link href={`/pacients/${paciente.nombre_paciente}_${paciente.id_paciente}`} className="flex items-center space-x-4">
 						<Avatar image={"/img/home_image.png"} />
-						{/* Mostrar nombre seguido del ID */}
 						<span className='text-base'>{`${paciente.nombre_paciente} - ${paciente.id_paciente}`}</span>
 					</Link>
 					<MoreVertIcon
@@ -141,7 +146,7 @@ export default function Pacients() {
 				</div>
 			))}
 
-			{/* Botón flotante */}
+			{/* Botón flotante para añadir paciente */}
 			<div className='fixed right-[calc(50%-180px)] bottom-20'>
 				<Fab aria-label="add" size='large' color='primary' onClick={() => setIsModalOpen(true)}>
 					<PersonAddIcon className='text-white' />
@@ -149,112 +154,55 @@ export default function Pacients() {
 			</div>
 
 			{/* Modal para añadir nuevo paciente */}
-			<Modal open={isModalOpen} onClose={() => setIsModalOpen(false)}>
-				<Box className="bg-white p-6 rounded-lg shadow-lg mx-auto my-10 max-w-md">
+			<Modal open={isModalOpen} onClose={() => setIsModalOpen(false)} className="flex items-center justify-center max-w-md mx-auto">
+				<Box className="bg-white p-6 rounded-lg shadow-lg mr-6">
 					<h2 className="text-2xl font-bold mb-4 text-center text-gray-800">Añadir Nuevo Paciente</h2>
-					<form className="space-y-4">
-						{/* Nombre */}
-						<TextField
-							label="Nombre"
-							name="nombre"
-							fullWidth
-							onChange={handleInputChange}
-							variant="outlined"
-							className="focus:ring-blue-500 focus:outline-none"
-						/>
-
-						{/* Profesión */}
-						<TextField
-							label="Profesión"
-							name="profesion"
-							fullWidth
-							onChange={handleInputChange}
-							variant="outlined"
-							className="focus:ring-blue-500 focus:outline-none"
-						/>
-
-						{/* Edad */}
-						<TextField
-							label="Edad"
-							name="edad"
-							type="number"
-							fullWidth
-							onChange={handleInputChange}
-							variant="outlined"
-							className="focus:ring-blue-500 focus:outline-none"
-						/>
-
-						{/* Estado Civil */}
-						<TextField
-							label="Estado Civil"
-							name="estado_civil"
-							fullWidth
-							onChange={handleInputChange}
-							variant="outlined"
-							className="focus:ring-blue-500 focus:outline-none"
-						/>
-
-						{/* Fecha de Nacimiento */}
-						<TextField
-							label="Fecha de Nacimiento"
-							name="fecha_nacimiento"
-							type="date"
-							fullWidth
-							onChange={handleInputChange}
-							variant="outlined"
-							className="focus:ring-blue-500 focus:outline-none"
-						/>
-
-						{/* Dirección */}
-						<TextField
-							label="Dirección"
-							name="direccion"
-							fullWidth
-							onChange={handleInputChange}
-							variant="outlined"
-							multiline
-							rows={3}
-							className="focus:ring-blue-500 focus:outline-none"
-						/>
-
-						{/* Teléfono */}
-						<TextField
-							label="Teléfono"
-							name="telefono"
-							fullWidth
-							onChange={handleInputChange}
-							variant="outlined"
-							className="focus:ring-blue-500 focus:outline-none"
-						/>
-
-						{/* Email */}
-						<TextField
-							label="Email"
-							name="email"
-							fullWidth
-							onChange={handleInputChange}
-							variant="outlined"
-							className="focus:ring-blue-500 focus:outline-none"
-						/>
+					<form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
+						{[
+							{ name: "nombre", label: "Nombre", pattern: /^[A-Za-z\s]+$/, errorMessage: "Solo se permiten letras." },
+							{ name: "profesion", label: "Profesión", required: "Campo obligatorio" },
+							{ name: "edad", label: "Edad", type: "number", min: 0, required: "Edad obligatoria" },
+							{ name: "estado_civil", label: "Estado Civil", required: "Campo obligatorio" },
+							{ name: "fecha_nacimiento", label: "Fecha de Nacimiento", type: "date", required: "Fecha obligatoria" },
+							{
+								name: "direccion",
+								label: "Dirección",
+								minLength: 10,
+								required: "Dirección obligatoria",
+								validate: {
+									validStructure: (value: string) =>
+										/^(?=.*(calle|avenida|av|número|numero|n°))(?=.*\d)/i.test(value.toLowerCase()) ||
+										"La dirección debe contener al menos una referencia válida como 'calle', 'avenida' y un número.",
+									noForbiddenWords: (value: string) =>
+										!["ninguna", "na", "sin calle", "no aplica"].some((word) => value.toLowerCase().includes(word)) ||
+										"No se permiten direcciones como 'Ninguna' o 'No aplica'.",
+								},
+							},
+							{ name: "telefono", label: "Teléfono", pattern: /^[0-9]{10}$/, errorMessage: "Teléfono inválido, deben ser 10 dígitos" },
+							{ name: "email", label: "Email", pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, errorMessage: "Formato de email incorrecto." }
+						].map((field) => (
+							<TextField
+								key={field.name}
+								fullWidth
+								label={field.label}
+								className='focus:ring-blue-500 focus:outline-none'
+								variant="outlined"
+								type={field.type || 'text'}
+								{...register(field.name, {
+									required: field.required,
+									minLength: field.minLength && { value: field.minLength, message: `Mínimo ${field.minLength} caracteres.` },
+									validate: field.validate || undefined,
+									pattern: field.pattern || undefined,
+								})}
+								error={!!errors[field.name as keyof FormInputs]}
+								helperText={errors[field.name as keyof FormInputs]?.message?.toString()}
+							/>
+						))}
+						<div className="mt-6 flex justify-end space-x-4">
+							<Button variant="outlined" onClick={() => setIsModalOpen(false)}>Cancelar</Button>
+							<Button variant="contained" color="primary" type="submit">Guardar</Button>
+						</div>
 					</form>
-
-					{/* Botones */}
-					<div className="mt-6 flex justify-end space-x-4">
-						<Button
-							variant="outlined"
-							className="hover:bg-gray-100 text-gray-700"
-							onClick={() => setIsModalOpen(false)}
-						>
-							Cancelar
-						</Button>
-						<Button
-							variant="contained"
-							color="primary"
-							onClick={handleSubmit}
-						>
-							Guardar
-						</Button>
-					</div>
 				</Box>
 			</Modal>
 
