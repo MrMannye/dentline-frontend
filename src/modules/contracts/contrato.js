@@ -1,7 +1,7 @@
 import Web3 from "web3";
 import contractData from "../../../build/contracts/ClinicaDental.json"; // Ruta al ABI del contrato
 
-const CONTRACT_ADDRESS = "0x2C3A5EBc640e75fdAC7E542a813096D6122F7b8f"; // Dirección del contrato    
+const CONTRACT_ADDRESS = "0xc63b7bB3930821F82690CE4273E39f28560EB993"; // Dirección del contrato    
 const abi = contractData.abi; // ABI del contrato
 
 // Instancia de Web3

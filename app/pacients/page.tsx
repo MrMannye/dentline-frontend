@@ -49,6 +49,7 @@ export default function Pacients() {
 	const fetchData = async () => {
 		const response = await fetch(`${process.env.NEXT_PUBLIC_API}/dentist/allPacients/${dentist?.id_dentista}`);
 		const data = await response.json();
+		console.log(data.data);
 		setPacientes(data.data);
 		setFilteredPacientes(data.data);
 	};
@@ -155,7 +156,7 @@ export default function Pacients() {
 
 			{/* Modal para añadir nuevo paciente */}
 			<Modal open={isModalOpen} onClose={() => setIsModalOpen(false)} className="flex items-center justify-center max-w-md mx-auto">
-				<Box className="bg-white p-6 rounded-lg shadow-lg mr-6">
+				<Box className="bg-white p-6 rounded-lg shadow-lg">
 					<h2 className="text-2xl font-bold mb-4 text-center text-gray-800">Añadir Nuevo Paciente</h2>
 					<form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
 						{[

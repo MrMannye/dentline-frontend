@@ -24,6 +24,7 @@ export default function Home() {
 		if (dentist?.id_dentista) {
 			fetchPatientCount();
 		}
+		console.log(dentist);
 	}, [dentist?.id_dentista]);
 
 	return (

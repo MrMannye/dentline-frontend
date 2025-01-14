@@ -12433,12 +12433,12 @@
     "5777": {
       "events": {},
       "links": {},
-      "address": "0x2C3A5EBc640e75fdAC7E542a813096D6122F7b8f",
-      "transactionHash": "0xfd05db0cce465430555d3ad0b00c330c072d8735d950e269c78208cb9cab54c7"
+      "address": "0xc63b7bB3930821F82690CE4273E39f28560EB993",
+      "transactionHash": "0x5afc81967a9e1e4a4e9b4b25bb00b3b8ef2e570d0f4fd874e8ce718b99e702a0"
     }
   },
   "schemaVersion": "3.4.16",
-  "updatedAt": "2025-01-10T18:46:56.067Z",
+  "updatedAt": "2025-01-14T19:28:00.203Z",
   "networkType": "ethereum",
   "devdoc": {
     "kind": "dev",
