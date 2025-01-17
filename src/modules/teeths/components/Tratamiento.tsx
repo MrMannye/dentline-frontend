@@ -6,6 +6,7 @@ import ConsultDialog from '../../../utils/ConsultDialog';
 import { usePatient } from '../../patients/context/PatientContext';
 import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
+import { min } from 'date-fns';
 
 export default function Tratamiento() {
 	const { patient, setPatient } = usePatient();
@@ -65,9 +66,10 @@ export default function Tratamiento() {
 									/>
 									<Input
 										id="standard-adornment-amount"
+										type='number'
 										placeholder='Precio'
 										startAdornment={<InputAdornment position="start">$</InputAdornment>}
-										{...register(`precio${tooth}`, { required: true })}
+										{...register(`precio${tooth}`, { required: true, min: 0 })}
 									/>
 								</div>
 							</FormControl>
