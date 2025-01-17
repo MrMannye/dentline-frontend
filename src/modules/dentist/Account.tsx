@@ -143,12 +143,13 @@ function Account() {
 							</InputLabel>
 							<Input
 								id={`standard-adornment-${input.name}`}
-								type='text'
+								type={input?.type || 'text'}
 								disabled={input.visible}
 								{...register(input.register, {
 									required: input.required && `${input.name} es obligatorio.`,
 									minLength: input?.min && { value: input.min, message: `Mínimo ${input.min} caracteres.` },
 									maxLength: input?.max && { value: input.max, message: `Máximo ${input.max} caracteres.` },
+									pattern: input?.pattern && { value: input.pattern.value, message: input.pattern.message },
 								})}
 								className='opacity-40 focus-within:opacity-90'
 								endAdornment={
