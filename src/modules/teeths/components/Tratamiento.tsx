@@ -39,7 +39,7 @@ export default function Tratamiento() {
 			return `${teeth.join(", ")} - ${key}`;
 		});
 
-		setPatient({ ...patient, tratamiento: formattedResults, observaciones: allValues.observaciones });
+		setPatient({ ...patient, tratamiento: formattedResults });
 		router.push(`/date`);
 	}
 
@@ -78,15 +78,6 @@ export default function Tratamiento() {
 				})}
 
 			</div>
-			<TextField
-				id="standard-multiline-static"
-				multiline
-				className='w-full mt-16'
-				rows={8}
-				label="Ingrese observaciones"
-				variant="outlined"
-				{...register("observaciones", { required: true })}
-			/>
 			<input type="button" onClick={() => saveDataConsult()} value={"GUARDAR"} className="h-12 w-full mt-8 self-center rounded-xl text-secundary-normal bg-primary-pressed shadow-xl text-center disabled:bg-primary-disable" />
 		</div>
 	)

@@ -66,9 +66,6 @@ export default function CardDate() {
 
 	// Función para eliminar cita
 	const handleDelete = async (id_cita: string | undefined) => {
-		const confirmDelete = window.confirm('¿Estás seguro de que deseas eliminar esta cita?');
-		if (!confirmDelete) return;
-
 		try {
 			const response = await fetch(`${process.env.NEXT_PUBLIC_API}/dates/deleteDate/${id_cita}`, {
 				method: 'DELETE',
@@ -77,6 +74,7 @@ export default function CardDate() {
 			console.log(data);
 			if (response.ok) {
 				await fetchData(); // Actualiza la lista de citas
+				setDeleteModalOpen(false);
 			} else {
 				console.log(`Error al eliminar la cita: ${data}`);
 			}

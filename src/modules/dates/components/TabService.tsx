@@ -4,10 +4,13 @@ import { Fab, FormControl, Input, InputAdornment, TextField } from '@mui/materia
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { usePatient } from '../../patients/context/PatientContext';
+import { useForm } from 'react-hook-form';
 
 export default function TabService(props: { setSection: (section: string) => void }) {
 	const [services, setServices] = useState<InputService[]>(inputsService);
 	const { patient, setPatient } = usePatient();
+	const { register, getValues } = useForm();
+
 
 	const addNewService = () => {
 		const newService = {
@@ -38,6 +41,7 @@ export default function TabService(props: { setSection: (section: string) => voi
 	};
 
 	const handleSubmit = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+		const allValues = getValues();
 		e.preventDefault();
 		console.log(services);
 
@@ -52,6 +56,7 @@ export default function TabService(props: { setSection: (section: string) => voi
 			setPatient({
 				...patient,
 				tratamiento: [...(newServices || []), ...nuevoTratamiento],
+				observaciones: allValues.observaciones,
 			});
 		}
 
@@ -94,6 +99,17 @@ export default function TabService(props: { setSection: (section: string) => voi
 						</FormControl>
 					</div>
 				))}
+			</div>
+			<div className='p-5'>
+				<TextField
+					id="standard-multiline-static"
+					multiline
+					className='w-full mt-16 mx-4'
+					rows={8}
+					label="Ingrese observaciones"
+					variant="outlined"
+					{...register("observaciones", { required: true })}
+				/>
 			</div>
 			<article className="w-full px-4 mb-7 flex flex-col items-end space-y-2">
 				<Fab color="primary" aria-label="add" style={{ marginRight: 12 }} onClick={addNewService}>
